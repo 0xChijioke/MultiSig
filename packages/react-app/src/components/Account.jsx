@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Button, Box, Flex } from '@chakra-ui/react';
 import React from "react";
-import { useThemeSwitcher } from "react-css-theme-switcher";
 
 import Address from "./Address";
 import Balance from "./Balance";
@@ -57,7 +56,6 @@ export default function Account({
   blockExplorer,
   isContract,
 }) {
-  const { currentTheme } = useThemeSwitcher();
 
   let accountButton;
   if (web3Modal?.cachedProvider) {
@@ -71,6 +69,8 @@ export default function Account({
       <Flex 
         align={"center"}
         border={1}
+        color={'white'}
+        spacing={3}
       >
         <Balance address={address} provider={localProvider} price={price} size={"1.125rem"} />
         <Wallet
@@ -79,14 +79,14 @@ export default function Account({
           signer={userSigner}
           ensProvider={mainnetProvider}
           price={price}
-          color={currentTheme === "light" ? "#1890ff" : "#2caad9"}
+          color={"#2caad9"}
           size={"1.4rem"}
           padding={"0px"}
         />
         <div style={{
           border: "1px solid transparent",
           borderRadius: "9999px",
-          backgroundColor: currentTheme === "light" ? "#f1f5f9" : "#262626",
+          backgroundColor: "#262626",
           marginLeft: "0.5rem",
           padding: "0.375rem 0.875rem",
         }}>
@@ -103,7 +103,10 @@ export default function Account({
         </div>
       </Flex>
       <Button
-        colorScheme='blue' 
+        m={3}
+        color='white'
+        colorScheme='white.500' 
+        size={'md'}
         variant='outline'
         onClick={accountButton.action}
       >

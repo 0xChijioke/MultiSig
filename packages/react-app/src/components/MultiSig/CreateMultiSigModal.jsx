@@ -1,5 +1,22 @@
+/* eslint-disable prettier/prettier */
+import { 
+  Box, 
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Modal,
+  useDisclosure,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { Button, Modal, InputNumber } from "antd";
+import {  InputNumber } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { ethers } from "ethers";
 import { Input } from "antd";
@@ -15,9 +32,9 @@ export default function CreateMultiSigModal({
   tx,
   writeContracts,
   contractName,
-  isCreateModalVisible,
-  setIsCreateModalVisible,
 }) {
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [pendingCreate, setPendingCreate] = useState(false);
   const [txSent, setTxSent] = useState(false);
   const [txError, setTxError] = useState(false);
@@ -33,14 +50,7 @@ export default function CreateMultiSigModal({
     }
   }, [address]);
 
-  const showCreateModal = () => {
-    setIsCreateModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setIsCreateModalVisible(false);
-  };
-
+  
   const addOwnerField = () => {
     const newOwners = [...owners, ""];
     setOwners(newOwners);
@@ -146,7 +156,7 @@ export default function CreateMultiSigModal({
             setPendingCreate(false);
             setTxSuccess(true);
             setTimeout(() => {
-              setIsCreateModalVisible(false);
+              onOpen(false);
               resetState();
             }, 2500);
           }
@@ -162,25 +172,29 @@ export default function CreateMultiSigModal({
     }
   };
 
+  
+
   return (
     <>
-      <Button type="primary" style={{ marginRight: 10 }} onClick={showCreateModal}>
-        Create
+      <Button 
+        colorScheme={"purple"}
+        // size={{ sm: 'xs', md: 'lg'}}
+        onClick={onOpen}>
+        New Wallet
       </Button>
+      
       <Modal
-        title="Create Multi-Sig Wallet"
-        visible={isCreateModalVisible}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" loading={pendingCreate} onClick={handleSubmit}>
-            Create
-          </Button>,
-        ]}
-      >
-        {txSent && (
+        closeOnOverlayClick={false}
+        bgColor={'black'}
+        colorScheme={'blackAlpha'}
+        isOpen={isOpen} 
+        onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create Multi-Sig Wallet</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+          {txSent && (
           <CreateModalSentOverlay
             txError={txError}
             txSuccess={txSuccess}
@@ -208,24 +222,38 @@ export default function CreateMultiSigModal({
                 />
               </div>
               {index > 0 && (
-                <Button style={{ padding: "0 0.5rem" }} danger onClick={() => removeOwnerField(index)}>
+                <Button 
+                  colorScheme={"red"}
+                  variant={"outline"}
+                  onClick={() => removeOwnerField(index)}>
                   <DeleteOutlined />
                 </Button>
               )}
             </div>
           ))}
           <div style={{ display: "flex", justifyContent: "flex-end", width: "90%" }}>
-            <Button onClick={addOwnerField}>
+            <Button 
+              colorScheme={"purple"}
+              variant={"outline"}
+              onClick={addOwnerField}>
               <PlusOutlined />
             </Button>
           </div>
           <div style={{ width: "90%" }}>
-            <InputNumber
-              style={{ width: "100%" }}
-              placeholder="Number of signatures required"
+            
+            
+          <NumberInput
+              
               value={signaturesRequired}
               onChange={setSignaturesRequired}
-            />
+            >
+              <NumberInputField 
+                placeHolder="Number of signatures required" />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
           </div>
           <div style={{ width: "90%" }}>
             <EtherInput
@@ -237,6 +265,26 @@ export default function CreateMultiSigModal({
             />
           </div>
         </div>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button 
+            key="back"
+            colorScheme={"red"}
+            variant={"outline"} 
+            mr={3}
+            onClick={onClose}>
+            Cancel
+            </Button>
+            <Button 
+            key="submit"
+            colorScheme={"purple"}
+            loading={pendingCreate} 
+            onClick={handleSubmit}>
+            Create
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
     </>
   );

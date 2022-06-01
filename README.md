@@ -1,14 +1,11 @@
-# 🪄 MaaS - Multi-Sig Wallet as a Service
+# Multi-Sig Wallet as a Service
 
 🚀 Built with [Scaffold-Eth](https://github.com/scaffold-eth/scaffold-eth)
 
-✨ Demo deployed on Rinkeby testnet: https://maasify.surge.sh/ and https://multisig.lol/
+✨ Demo deployed on Rinkeby testnet: https://.surge.sh/ 
 
 Create multiple multisignature wallets and see their details as well as propose, execute, and sign transactions - all in just a few clicks.
 
-<img width="1131" alt="image" src="https://user-images.githubusercontent.com/12888080/159298438-ade3d676-5275-4c6e-978b-9421bcb5f746.png">
-<img width="575" alt="image" src="https://user-images.githubusercontent.com/12888080/159298592-3fbfd03e-c319-41ce-8008-153d1cfd2a1d.png">
-<img width="1123" alt="image" src="https://user-images.githubusercontent.com/12888080/159298776-dd498375-4554-444a-adb5-9272f7dcaec0.png">
 
 # 🏄‍♂️ Getting Started Locally
 
@@ -17,7 +14,7 @@ Prerequisites: [Node (v16 LTS)](https://nodejs.org/en/download/) plus [Yarn](htt
 > clone/fork 🪄 MaaS:
 
 ```bash
-git clone https://github.com/austintgriffith/maas
+git clone 
 ```
 
 > install and start your 👷‍ Hardhat chain:

@@ -1,4 +1,6 @@
-import { Button, Col, Menu, Row, Alert, Select } from "antd";
+/* eslint-disable prettier/prettier */
+import { Container, Flex, Button, ButtonGroup, Image, Box, Stack} from '@chakra-ui/react';
+import { Col, Menu, Row, Alert, Select } from "antd";
 import "antd/dist/antd.css";
 import {
   useBalance,
@@ -18,9 +20,9 @@ import {
   Contract,
   Faucet,
   GasGauge,
+  CustomLink,
   Header,
   Ramp,
-  ThemeSwitch,
   NetworkDisplay,
   FaucetHint,
   NetworkSwitch,
@@ -28,6 +30,7 @@ import {
   ImportMultiSigModal,
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
+import { web } from "./image";
 import externalContracts from "./contracts/external_contracts";
 //import multiSigWalletABI from "./contracts/multi_sig_wallet";
 // contracts
@@ -460,8 +463,7 @@ function App(props) {
 
   console.log("currentMultiSigAddress:", currentMultiSigAddress);
 
-  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
-
+ 
   const selectNetworkOptions = [];
   for (const id in NETWORKS) {
     selectNetworkOptions.push(
@@ -529,9 +531,10 @@ function App(props) {
         logoutOfWeb3Modal={logoutOfWeb3Modal}
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
-      <div style={{ position: "relative" }}>
-        <div style={{ position: "absolute", left: 20, display: "flex", flexDirection: "column", alignItems: "start" }}>
-          <div>
+      
+        <Container
+          >
+          <Flex align='center' w='100%'>
             <CreateMultiSigModal
               price={price}
               selectedChainId={selectedChainId}
@@ -540,8 +543,6 @@ function App(props) {
               tx={tx}
               writeContracts={writeContracts}
               contractName={"MultiSigFactory"}
-              isCreateModalVisible={isCreateModalVisible}
-              setIsCreateModalVisible={setIsCreateModalVisible}
             />
             <Select value={[currentMultiSigAddress]} style={{ width: 120, marginRight: 5, }} onChange={handleMultiSigChange}>
               {multiSigs.map((address, index) => (
@@ -551,7 +552,7 @@ function App(props) {
               ))}
             </Select>
             {networkSelect}
-          </div>
+          
           <ImportMultiSigModal
             mainnetProvider={mainnetProvider}
             targetNetwork={targetNetwork}
@@ -562,11 +563,28 @@ function App(props) {
             multiSigWalletABI={multiSigWalletABI}
             localProvider={localProvider}
           />
-        </div>
-      </div>
-      <Menu
+          </Flex>
+        </Container>
+      
+
+      <Box
+        display='flex'
+        alignItems='center'
+        justifyContent='center'
+        width='100%'
+
+        mb={2}
+      >
+    <ButtonGroup gap='6'>
+      <Button as={CustomLink} to={'/'} color='white' variant='ghost' >MultiSig</Button>
+      <Button as={CustomLink} to={'/create'} color='white' variant='ghost' >Transaction</Button>
+      <Button as={CustomLink} to={'/pool'} color='white' variant='ghost' >Pool</Button>
+    </ButtonGroup>
+  </Box>
+
+       {/* <Menu
         disabled={!userHasMultiSigs}
-        style={{ textAlign: "center", marginTop: 40 }}
+        style={{ textAlign: "center", backgroundColor: 'black', color: 'white' }}
         selectedKeys={[location.pathname]}
         mode="horizontal"
       >
@@ -579,27 +597,24 @@ function App(props) {
         <Menu.Item key="/pool">
           <Link to="/pool">Pool</Link>
         </Menu.Item>
-      </Menu>
+      </Menu>  */}
 
       <Switch>
         <Route exact path="/">
           {!userHasMultiSigs ? (
-            <Row style={{ marginTop: 40 }}>
-              <Col span={12} offset={6}>
-                <Alert
-                  message={
-                    <>
-                      ✨{" "}
-                      <Button onClick={() => setIsCreateModalVisible(true)} type="link" style={{ padding: 0 }}>
-                        Create
-                      </Button>{" "}
-                      or select your Multi-Sig ✨
-                    </>
-                  }
-                  type="info"
-                />
-              </Col>
-            </Row>
+            <Stack 
+          // minH={'100vh'} 
+              direction={{ base: 'column', md: 'row' }}>  
+              <Flex
+                size={"sm"}
+                h={'sm'}
+                >
+                <Image src={web} />
+              </Flex>
+              <Flex>
+
+              </Flex>
+            </Stack>
           ) : (
             <Home
               contractAddress={currentMultiSigAddress}
@@ -701,7 +716,7 @@ function App(props) {
         </Route>
       </Switch>
 
-      <ThemeSwitch />
+
 
       {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
       <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>

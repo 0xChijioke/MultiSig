@@ -2,7 +2,6 @@
 
 import { Button, Box, Flex, Text } from '@chakra-ui/react';import { Skeleton } from "antd";
 import React from "react";
-import { useThemeSwitcher } from "react-css-theme-switcher";
 import Blockies from "react-blockies";
 import { useLookupAddress } from "eth-hooks/dapps/ens";
 
@@ -35,7 +34,6 @@ import { useLookupAddress } from "eth-hooks/dapps/ens";
 const blockExplorerLink = (address, blockExplorer) => `${blockExplorer || "https://etherscan.io/"}address/${address}`;
 
 export default function Address(props) {
-  const { currentTheme } = useThemeSwitcher();
   const address = props.value || props.address;
   const ens = useLookupAddress(props.ensProvider, address);
   const ensSplit = ens && ens.split(".");
@@ -63,12 +61,14 @@ export default function Address(props) {
     return (
       <span style={{ verticalAlign: "middle" }}>
         <a
-          style={{ color: currentTheme === "light" ? "#222222" : "#ddd" }}
+          style={{ color: "#ffff" }}
           target="_blank"
           href={etherscanLink}
           rel="noopener noreferrer"
         >
+         <span style={{ overflow: 'hidden', borderRadius: '50%'}}>
           <Blockies seed={address.toLowerCase()} size={props.blockieSize ? props.blockieSize : 8} scale={2} />
+        </span>
         </a>
       </span>
     );
@@ -85,7 +85,7 @@ export default function Address(props) {
         {props.onChange ? (
           <Text editable={{ onChange: props.onChange }} copyable={{ text: address }}>
             <a
-              style={{ color: currentTheme === "light" ? "#222222" : "#ddd" }}
+              style={{ color: "#ffff" }}
               target="_blank"
               href={etherscanLink}
               rel="noopener noreferrer"
@@ -96,7 +96,7 @@ export default function Address(props) {
         ) : (
           <Text copyable={{ text: address }}>
             <a
-              style={{ color: currentTheme === "light" ? "#222222" : "#ddd" }}
+              style={{ color: "#fff" }}
               target="_blank"
               href={etherscanLink}
               rel="noopener noreferrer"
