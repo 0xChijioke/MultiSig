@@ -1,6 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { Container, Flex, Button, ButtonGroup, Image, Box, Stack} from '@chakra-ui/react';
-import { Col, Menu, Row, Alert, Select } from "antd";
+import { Container, 
+  Flex,
+  Select,
+  Icon,
+  Popover,
+  PopoverTrigger,
+  PopoverContent, Button, ButtonGroup, Image, Box, Stack} from '@chakra-ui/react';
+  import {
+    GrDown
+  } from 'react-icons/gr';
+import { Col, Row, } from "antd";
 import "antd/dist/antd.css";
 import {
   useBalance,
@@ -13,7 +22,7 @@ import {
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 import { useEventListener } from "eth-hooks/events/";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, Route, Switch, useLocation } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 import "./App.css";
 import {
   Account,
@@ -39,7 +48,6 @@ import { Transactor, Web3ModalSetup } from "./helpers";
 import { Home, Hints, Subgraph, CreateTransaction, Transactions } from "./views";
 import { useStaticJsonRPC, useLocalStorage } from "./hooks";
 
-const { Option } = Select;
 const { ethers } = require("ethers");
 
 /// 📡 What chain are your contracts deployed to?
@@ -467,16 +475,16 @@ function App(props) {
   const selectNetworkOptions = [];
   for (const id in NETWORKS) {
     selectNetworkOptions.push(
-      <Select.Option key={id} value={NETWORKS[id].name}>
+      <option key={id} value={NETWORKS[id].name}>
         <span style={{ color: NETWORKS[id].color }}>{NETWORKS[id].name}</span>
-      </Select.Option>,
+      </option>,
     );
   }
 
   const networkSelect = (
     <Select
       defaultValue={targetNetwork.name}
-      style={{ textAlign: "left", width: 170 }}
+      color='white'
       onChange={value => {
         if (targetNetwork.chainId != NETWORKS[value].chainId) {
           window.localStorage.setItem("network", value);
@@ -492,6 +500,7 @@ function App(props) {
 
   return (
     <div className="App">
+      <>
       <Header>
         {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
         <div style={{ position: "relative" }}>
@@ -534,7 +543,7 @@ function App(props) {
       
         <Container
           >
-          <Flex align='center' w='100%'>
+          <Flex align='center' justifyContent='space-evenly' w='100%'>
             <CreateMultiSigModal
               price={price}
               selectedChainId={selectedChainId}
@@ -544,11 +553,15 @@ function App(props) {
               writeContracts={writeContracts}
               contractName={"MultiSigFactory"}
             />
-            <Select value={[currentMultiSigAddress]} style={{ width: 120, marginRight: 5, }} onChange={handleMultiSigChange}>
+
+            
+            <Select value={[currentMultiSigAddress]}
+              onChange={handleMultiSigChange}
+              color='white'>
               {multiSigs.map((address, index) => (
-                <Option key={index} value={address}>
+                <option key={index} value={address}>
                   {address}
-                </Option>
+                </option>
               ))}
             </Select>
             {networkSelect}
@@ -576,42 +589,28 @@ function App(props) {
         mb={2}
       >
     <ButtonGroup gap='6'>
-      <Button as={CustomLink} to={'/'} color='white' variant='ghost' >MultiSig</Button>
+      <Button as={CustomLink} to={'/'} color='white' colorScheme={'white'} variant='ghost' >MultiSig</Button>
       <Button as={CustomLink} to={'/create'} color='white' variant='ghost' >Transaction</Button>
       <Button as={CustomLink} to={'/pool'} color='white' variant='ghost' >Pool</Button>
     </ButtonGroup>
   </Box>
 
-       {/* <Menu
-        disabled={!userHasMultiSigs}
-        style={{ textAlign: "center", backgroundColor: 'black', color: 'white' }}
-        selectedKeys={[location.pathname]}
-        mode="horizontal"
-      >
-        <Menu.Item key="/">
-          <Link to="/">MultiSig</Link>
-        </Menu.Item>
-        <Menu.Item key="/create">
-          <Link to="/create">Propose Transaction</Link>
-        </Menu.Item>
-        <Menu.Item key="/pool">
-          <Link to="/pool">Pool</Link>
-        </Menu.Item>
-      </Menu>  */}
 
       <Switch>
         <Route exact path="/">
           {!userHasMultiSigs ? (
-            <Stack 
+            <Stack w={'full'} alignItems='center'
           // minH={'100vh'} 
               direction={{ base: 'column', md: 'row' }}>  
               <Flex
-                size={"sm"}
-                h={'sm'}
+                size={{sm: 'sm', md: 'sm'}}
+                align='center'
+                w='50%'
+                h={'150px'}
                 >
                 <Image src={web} />
               </Flex>
-              <Flex>
+              <Flex w={'50%'}>
 
               </Flex>
             </Stack>
@@ -757,7 +756,8 @@ function App(props) {
           </Col>
         </Row>
       </div>
-    </div>
+    </>
+   </div>
   );
 }
 

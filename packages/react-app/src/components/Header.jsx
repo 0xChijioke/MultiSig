@@ -9,11 +9,14 @@ export default function Header(props) {
   return (
     <>
     <Flex
-      m='20px'
+      p='20px'
       justifyContent= "space-between"
+      transition={'all .25s ease-in-out'}
       alignItems= "center">
        <Text 
-          fontWeight={700}>👛 Frens Locker
+          color={'white'}
+          fontSize={{sm: 'md', lg: '2xl'}}
+          fontWeight={700}> MultiSig
         </Text>
         
       {props.children}

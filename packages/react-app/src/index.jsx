@@ -5,8 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 import ReactDOM from "react-dom";
 import App from "./App";
 import "./index.css";
-import { ChakraProvider } from '@chakra-ui/react';
-import { extendTheme } from '@chakra-ui/react'
+import { extendTheme, ChakraProvider } from '@chakra-ui/react';
+
 
 const theme = extendTheme({
   components: {
