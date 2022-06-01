@@ -543,7 +543,7 @@ function App(props) {
       
         <Container
           >
-          <Flex align='center' justifyContent='space-evenly' w='100%'>
+          <Flex align={{sm: 'center', md: 'flex-start'}} justifyContent='space-evenly' w='100%'>
             <CreateMultiSigModal
               price={price}
               selectedChainId={selectedChainId}
@@ -605,12 +605,13 @@ function App(props) {
               <Flex
                 size={{sm: 'sm', md: 'sm'}}
                 align='center'
-                w='50%'
-                h={'150px'}
+                w='fit-content'
+                h={'70px'}
                 >
                 <Image src={web} />
               </Flex>
               <Flex w={'50%'}>
+          
 
               </Flex>
             </Stack>
