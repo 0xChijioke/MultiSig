@@ -546,7 +546,7 @@ function App(props) {
         </Stack>
 
         
-          <Stack direction={'row'}>
+          {/* <Stack is direction={'row'}>
             <Flex>
               <CreateMultiSigModal
                 price={price}
@@ -590,7 +590,7 @@ function App(props) {
                 localProvider={localProvider}
               />
             </Flex>
-          </Stack>
+          </Stack> */}
       
               
 
@@ -643,6 +643,8 @@ function App(props) {
                       tx={tx}
                       writeContracts={writeContracts}
                       contractName={"MultiSigFactory"}
+                      isCreateModalVisible={isCreateModalVisible}
+                      setIsCreateModalVisible={setIsCreateModalVisible}
                     />
                   </Flex> 
 

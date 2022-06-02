@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
-import { Select, List, Spin, Collapse } from "antd";
+import { Select, Spin, Collapse } from "antd";
 import { Address } from "..";
+import { Flex, Heading, List, ListItem, ListIcon, Box } from "@chakra-ui/react";
+import { MdCheckCircle } from "react-icons/md";
 
 const { Panel } = Collapse;
 
@@ -20,30 +22,35 @@ export default function Owners({
       prevOwners.add(ownerEvent.args.owner)
       owners.delete(ownerEvent.args.owner);
     }
+   
   });
 
+  const own = [...owners];
   return (
-    <div>
-      <h2 style={{marginTop:32}}>Signatures Required: {signaturesRequired ? signaturesRequired.toNumber() :<Spin></Spin>}</h2>
-      <List
-        header={<h2>Owners</h2>}
-        style={{maxWidth:400, margin:"auto", marginTop:32}}
-        bordered
-        dataSource={[...owners]}
-        renderItem={(ownerAddress) => {
-          return (
-            <List.Item key={"owner_" + ownerAddress}>
+    
+    <Flex direction={"column"} color={"white"} align={"center"}>
+      <Heading fontSize={20} py={6} color={"white"}>
+        Signatures Required: {signaturesRequired ? signaturesRequired.toNumber() : <Spin></Spin>}
+      </Heading>
+      
+       <List>
+         <Heading fontSize={20} py={6} color={"white"}>Owners</Heading>
+         
+        {own.map((ownerAddress, i) => (
+            <ListIte fontSize={1} key={i}>
+              <ListIcon as={MdCheckCircle} color='green.500' />
               <Address
                 address={ownerAddress}
                 ensProvider={mainnetProvider}
                 blockExplorer={blockExplorer}
-                fontSize={24}
+                fontSize={18}
               />
-            </List.Item>
-          )
-        }}
-      />
-
+              <ListIcon as={MdCheckCircle} color='green.500' />
+            </ListItem>
+          ))
+        }
+        
+      </List>
       <Collapse collapsible={prevOwners.size == 0 ? "disabled" : ""} style={{maxWidth:400, margin:"auto", marginTop:10}}>
         <Panel header="Previous Owners" key="1">
           <List
@@ -63,6 +70,9 @@ export default function Owners({
           />
         </Panel>
       </Collapse>
-    </div>
+    </Flex>
+  
   );
+
+
 }

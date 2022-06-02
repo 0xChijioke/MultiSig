@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+import { Container, Box, Flex, Stack } from "@chakra-ui/react";
 import React from "react";
 import { Balance, Address, TransactionListItem, Owners } from "../components";
 import QR from "qrcode.react";
@@ -17,17 +19,17 @@ export default function Home({
 }) {
   return (
     <>
-      <div style={{ padding: 32, maxWidth: 850, margin: "auto" }}>
-        <div style={{ paddingBottom: 32 }}>
-          <div>
+      <Container mt={7} alignItems={'center'}>
+        <Stack align={'center'} boxShadow={'md'}  borderRadius={'30px'} py={"40px"} px={0} bgGradient='linear(to-l, black 70%, gray.800)'>
+          <Flex color={'white'}>
             <Balance
               address={contractAddress ? contractAddress : ""}
               provider={localProvider}
               dollarMultiplier={price}
               size={64}
             />
-          </div>
-          <div>
+          </Flex>
+          <Flex pt={5}>
             <QR
               value={contractAddress ? contractAddress.toString() : ""}
               size="180"
@@ -36,19 +38,19 @@ export default function Home({
               renderAs="svg"
               imageSettings={{ excavate: false }}
             />
-          </div>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          </Flex>
+          <Flex p={6}>
             <Address
               address={contractAddress ? contractAddress : ""}
               ensProvider={mainnetProvider}
               blockExplorer={blockExplorer}
-              fontSize={32}
+              fontSize={20}
             />
-          </div>
-        </div>
-        <div style={{padding:32}}>
+          </Flex>
+        </Stack>
+        <Box align='center' color={'white'}>
         <Owners ownerEvents={ownerEvents} signaturesRequired={signaturesRequired} mainnetProvider={mainnetProvider} blockExplorer={blockExplorer} />
-        </div>
+        </Box>
         <div style={{padding:64}}>
         <Button type={"primary"} onClick={()=>{
           window.location = "/create"
@@ -70,7 +72,7 @@ export default function Home({
             );
           }}
         />
-      </div>
+      </Container>
 
 
     </>
