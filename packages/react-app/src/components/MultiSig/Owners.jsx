@@ -6,56 +6,46 @@ import { MdCheckCircle } from "react-icons/md";
 
 const { Panel } = Collapse;
 
-export default function Owners({
-  ownerEvents,
-  signaturesRequired,
-  mainnetProvider,
-  blockExplorer
-}) {
+export default function Owners({ ownerEvents, signaturesRequired, mainnetProvider, blockExplorer }) {
   const owners = new Set();
   const prevOwners = new Set();
-  ownerEvents.forEach((ownerEvent) => {
+  ownerEvents.forEach(ownerEvent => {
     if (ownerEvent.args.added) {
       owners.add(ownerEvent.args.owner);
-      prevOwners.delete(ownerEvent.args.owner)
+      prevOwners.delete(ownerEvent.args.owner);
     } else {
-      prevOwners.add(ownerEvent.args.owner)
+      prevOwners.add(ownerEvent.args.owner);
       owners.delete(ownerEvent.args.owner);
     }
-   
   });
 
   const own = [...owners];
   return (
-    
     <Flex direction={"column"} color={"white"} align={"center"}>
       <Heading fontSize={20} py={6} color={"white"}>
         Signatures Required: {signaturesRequired ? signaturesRequired.toNumber() : <Spin></Spin>}
       </Heading>
-      
-       <List>
-         <Heading fontSize={20} py={6} color={"white"}>Owners</Heading>
-         
+
+      <List>
+        <Heading fontSize={20} py={6} color={"white"}>
+          Owners
+        </Heading>
+
         {own.map((ownerAddress, i) => (
-            <ListIte fontSize={1} key={i}>
-              <ListIcon as={MdCheckCircle} color='green.500' />
-              <Address
-                address={ownerAddress}
-                ensProvider={mainnetProvider}
-                blockExplorer={blockExplorer}
-                fontSize={18}
-              />
-              <ListIcon as={MdCheckCircle} color='green.500' />
-            </ListItem>
-          ))
-        }
-        
+          <ListItem as={Flex} direction="row" align="center" key={i}>
+            <ListIcon as={MdCheckCircle} color="green.500" />
+            <Address address={ownerAddress} ensProvider={mainnetProvider} blockExplorer={blockExplorer} fontSize={18} />
+          </ListItem>
+        ))}
       </List>
-      <Collapse collapsible={prevOwners.size == 0 ? "disabled" : ""} style={{maxWidth:400, margin:"auto", marginTop:10}}>
+      <Collapse
+        collapsible={prevOwners.size == 0 ? "disabled" : ""}
+        style={{ maxWidth: 400, margin: "auto", marginTop: 10 }}
+      >
         <Panel header="Previous Owners" key="1">
           <List
             dataSource={[...prevOwners]}
-            renderItem={(prevOwnerAddress) => {
+            renderItem={prevOwnerAddress => {
               return (
                 <List.Item key={"owner_" + prevOwnerAddress}>
                   <Address
@@ -65,14 +55,11 @@ export default function Owners({
                     fontSize={24}
                   />
                 </List.Item>
-              )
+              );
             }}
           />
         </Panel>
       </Collapse>
     </Flex>
-  
   );
-
-
 }
