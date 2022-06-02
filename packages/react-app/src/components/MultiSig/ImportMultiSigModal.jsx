@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Button, Modal, Select, Alert } from "antd";
+import { Button } from "@chakra-ui/react";
+import { Modal, Select, Alert } from "antd";
 import { ethers } from "ethers";
 import { useLocalStorage } from "../../hooks";
 
@@ -62,7 +63,11 @@ export default function ImportMultiSigModal({
 
   return (
     <>
-      <Button type="link" onClick={ () => setIsModalVisible(true) }>Import</Button>
+      <Button 
+        colorScheme={"purple"}
+        // size={{ sm: 'xs', md: 'lg'}}
+        // onClick={onOpen} 
+        onClick={ () => setIsModalVisible(true) }>Import</Button>
       <Modal
         title="Import Multisig"
         visible={isModalVisible}
@@ -74,8 +79,10 @@ export default function ImportMultiSigModal({
           </Button>,
           <Button
             key="submit"
-            type="primary"
-            disabled={!address || !network}
+            colorScheme={"purple"}
+            // size={{ sm: 'xs', md: 'lg'}}
+            // onClick={onOpen}
+            isDisabled={!address || !network}
             loading={pendingImport}
             onClick={handleSubmit}
           >

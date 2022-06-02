@@ -1,15 +1,13 @@
 /* eslint-disable prettier/prettier */
 import { Container, 
   Flex,
-  Select,
+ // Select,
   Icon,
-  Popover,
-  PopoverTrigger,
-  PopoverContent, Button, ButtonGroup, Image, Box, Stack} from '@chakra-ui/react';
+  Button, ButtonGroup, Image, Box, Stack, Heading, HStack} from '@chakra-ui/react';
   import {
     GrDown
   } from 'react-icons/gr';
-import { Col, Row, } from "antd";
+import { Col, Row, Select } from "antd";
 import "antd/dist/antd.css";
 import {
   useBalance,
@@ -47,6 +45,8 @@ import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
 import { Home, Hints, Subgraph, CreateTransaction, Transactions } from "./views";
 import { useStaticJsonRPC, useLocalStorage } from "./hooks";
+
+const { Options } = Select;
 
 const { ethers } = require("ethers");
 
@@ -471,20 +471,22 @@ function App(props) {
 
   console.log("currentMultiSigAddress:", currentMultiSigAddress);
 
+
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
  
   const selectNetworkOptions = [];
   for (const id in NETWORKS) {
     selectNetworkOptions.push(
-      <option key={id} value={NETWORKS[id].name}>
+      <Select.Option key={id} value={NETWORKS[id].name}>
         <span style={{ color: NETWORKS[id].color }}>{NETWORKS[id].name}</span>
-      </option>,
+      </Select.Option>,
     );
   }
 
   const networkSelect = (
     <Select
       defaultValue={targetNetwork.name}
-      color='white'
+      style={{ textAlign: "left", width: 170 }}
       onChange={value => {
         if (targetNetwork.chainId != NETWORKS[value].chainId) {
           window.localStorage.setItem("network", value);
@@ -501,119 +503,163 @@ function App(props) {
   return (
     <div className="App">
       <>
-      <Header>
-        {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
-        <div style={{ position: "relative" }}>
-          <div style={{ display: "flex", flex: 1, alignItems: "center", padding: "0.5rem 0" }}>
-            {USE_NETWORK_SELECTOR && (
-              <div style={{ marginRight: 20 }}>
-                <NetworkSwitch
-                  networkOptions={networkOptions}
-                  selectedNetwork={selectedNetwork}
-                  setSelectedNetwork={setSelectedNetwork}
+        <Stack>
+          <Header>
+            {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
+            <div style={{ position: "relative" }}>
+              <div style={{ display: "flex", flex: 1, alignItems: "center", padding: "0.5rem 0" }}>
+                {USE_NETWORK_SELECTOR && (
+                  <div style={{ marginRight: 20 }}>
+                    <NetworkSwitch
+                      networkOptions={networkOptions}
+                      selectedNetwork={selectedNetwork}
+                      setSelectedNetwork={setSelectedNetwork}
+                    />
+                  </div>
+                )}
+                <Account
+                  useBurner={USE_BURNER_WALLET}
+                  address={address}
+                  localProvider={localProvider}
+                  userSigner={userSigner}
+                  mainnetProvider={mainnetProvider}
+                  price={price}
+                  web3Modal={web3Modal}
+                  loadWeb3Modal={loadWeb3Modal}
+                  logoutOfWeb3Modal={logoutOfWeb3Modal}
+                  blockExplorer={blockExplorer}
                 />
               </div>
-            )}
-            <Account
-              useBurner={USE_BURNER_WALLET}
-              address={address}
-              localProvider={localProvider}
-              userSigner={userSigner}
-              mainnetProvider={mainnetProvider}
-              price={price}
-              web3Modal={web3Modal}
-              loadWeb3Modal={loadWeb3Modal}
-              logoutOfWeb3Modal={logoutOfWeb3Modal}
-              blockExplorer={blockExplorer}
-            />
-          </div>
-          {yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
-            <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />
-          )}
-        </div>
-      </Header>
-      <NetworkDisplay
-        NETWORKCHECK={NETWORKCHECK}
-        localChainId={localChainId}
-        selectedChainId={selectedChainId}
-        targetNetwork={targetNetwork}
-        logoutOfWeb3Modal={logoutOfWeb3Modal}
-        USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-      />
-      
-        <Container
-          >
-          <Flex align={{sm: 'center', md: 'flex-start'}} justifyContent='space-evenly' w='100%'>
-            <CreateMultiSigModal
-              price={price}
-              selectedChainId={selectedChainId}
-              mainnetProvider={mainnetProvider}
-              address={address}
-              tx={tx}
-              writeContracts={writeContracts}
-              contractName={"MultiSigFactory"}
-            />
-
-            
-            <Select value={[currentMultiSigAddress]}
-              onChange={handleMultiSigChange}
-              color='white'>
-              {multiSigs.map((address, index) => (
-                <option key={index} value={address}>
-                  {address}
-                </option>
-              ))}
-            </Select>
-            {networkSelect}
-          
-          <ImportMultiSigModal
-            mainnetProvider={mainnetProvider}
+              {yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
+                <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />
+              )}
+            </div>
+          </Header>
+          <NetworkDisplay
+            NETWORKCHECK={NETWORKCHECK}
+            localChainId={localChainId}
+            selectedChainId={selectedChainId}
             targetNetwork={targetNetwork}
-            networkOptions={selectNetworkOptions}
-            multiSigs={multiSigs}
-            setMultiSigs={setMultiSigs}
-            setCurrentMultiSigAddress={setCurrentMultiSigAddress}
-            multiSigWalletABI={multiSigWalletABI}
-            localProvider={localProvider}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+            USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
           />
-          </Flex>
-        </Container>
+        </Stack>
+
+        
+          <Stack direction={'row'}>
+            <Flex>
+              <CreateMultiSigModal
+                price={price}
+                selectedChainId={selectedChainId}
+                mainnetProvider={mainnetProvider}
+                address={address}
+                tx={tx}
+                writeContracts={writeContracts}
+                contractName={"MultiSigFactory"}
+                isCreateModalVisible={isCreateModalVisible}
+                setIsCreateModalVisible={setIsCreateModalVisible}
+              />
+            </Flex>     
+              <Flex >
+                <Select 
+                  w={'100px'} 
+                  value={[currentMultiSigAddress]}
+                  isDisabled={!userHasMultiSigs}
+                  onChange={handleMultiSigChange}
+                  color='white'>
+                  {multiSigs.map((address, index) => (
+                    <option key={index} value={address}>
+                      {address}
+                    </option>
+                  ))}
+                </Select>
+              </Flex>
+            
+            <Flex>
+              {networkSelect}
+            </Flex>
+            <Flex>
+              <ImportMultiSigModal
+                mainnetProvider={mainnetProvider}
+                targetNetwork={targetNetwork}
+                networkOptions={selectNetworkOptions}
+                multiSigs={multiSigs}
+                setMultiSigs={setMultiSigs}
+                setCurrentMultiSigAddress={setCurrentMultiSigAddress}
+                multiSigWalletABI={multiSigWalletABI}
+                localProvider={localProvider}
+              />
+            </Flex>
+          </Stack>
       
+              
 
-      <Box
-        display='flex'
-        alignItems='center'
-        justifyContent='center'
-        width='100%'
+          <Box
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            width='100%'
 
-        mb={2}
-      >
-    <ButtonGroup gap='6'>
-      <Button as={CustomLink} to={'/'} color='white' colorScheme={'white'} variant='ghost' >MultiSig</Button>
-      <Button as={CustomLink} to={'/create'} color='white' variant='ghost' >Transaction</Button>
-      <Button as={CustomLink} to={'/pool'} color='white' variant='ghost' >Pool</Button>
-    </ButtonGroup>
-  </Box>
+            mb={2}
+          >
+            <ButtonGroup gap='6'>
+              <Button as={CustomLink} to={'/'} color='white' colorScheme={'white'} variant='ghost' >MultiSig</Button>
+              <Button as={CustomLink} to={'/create'} color='white' colorScheme={'white'} variant='ghost' >Transaction</Button>
+              <Button as={CustomLink} to={'/pool'} color='white' colorScheme={'white'} variant='ghost' >Pool</Button>
+            </ButtonGroup>
+          </Box>
 
 
-      <Switch>
-        <Route exact path="/">
-          {!userHasMultiSigs ? (
-            <Stack w={'full'} alignItems='center'
-          // minH={'100vh'} 
-              direction={{ base: 'column', md: 'row' }}>  
+        <Switch>
+          <Route exact path="/">
+            {!userHasMultiSigs ? (
+              <Stack minH={'500px'} w={'full'} h='auto' alignItems='center'
+            // minH={'100vh'} 
+                direction={{ base: 'column', md: 'row' }}
+                >  
               <Flex
-                size={{sm: 'sm', md: 'sm'}}
+                px={'auto'}
                 align='center'
-                w='fit-content'
-                h={'70px'}
                 >
-                <Image src={web} />
+                <Image h='500px' w='700%' src={web} />
               </Flex>
-              <Flex w={'50%'}>
-          
+              <Stack w={'50%'}
+                direction='column'
+                px={'10px'}
+                align='center'>
+                <Heading
+                  fontSize={'60px'}
+                  fontWeight={700}
+                  color='whiteAlpha.900'>
+                  Seccuring assets against single point of failure vulnerabilities.
+                </Heading>
+                <HStack align={'center'} py={'20px'}>
+                  <Flex >
+                    <CreateMultiSigModal
+                      price={price}
+                      selectedChainId={selectedChainId}
+                      mainnetProvider={mainnetProvider}
+                      address={address}
+                      tx={tx}
+                      writeContracts={writeContracts}
+                      contractName={"MultiSigFactory"}
+                    />
+                  </Flex> 
 
-              </Flex>
+                  <Flex>
+                    <ImportMultiSigModal
+                      mainnetProvider={mainnetProvider}
+                      targetNetwork={targetNetwork}
+                      networkOptions={selectNetworkOptions}
+                      multiSigs={multiSigs}
+                      setMultiSigs={setMultiSigs}
+                      setCurrentMultiSigAddress={setCurrentMultiSigAddress}
+                      multiSigWalletABI={multiSigWalletABI}
+                      localProvider={localProvider}
+                    />
+                  </Flex> 
+                </HStack>
+              </Stack>
             </Stack>
           ) : (
             <Home
@@ -719,7 +765,7 @@ function App(props) {
 
 
       {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
-      <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
+      {/* <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
         <Row align="middle" gutter={[4, 4]}>
           <Col span={8}>
             <Ramp price={price} address={address} networks={NETWORKS} />
@@ -747,7 +793,7 @@ function App(props) {
         <Row align="middle" gutter={[4, 4]}>
           <Col span={24}>
             {
-              /*  if the local provider has a signer, let's show the faucet:  */
+                if the local provider has a signer, let's show the faucet: 
               faucetAvailable ? (
                 <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
               ) : (
@@ -756,7 +802,7 @@ function App(props) {
             }
           </Col>
         </Row>
-      </div>
+      </div> */}
     </>
    </div>
   );
