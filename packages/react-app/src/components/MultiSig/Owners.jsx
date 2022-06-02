@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect } from "react";
 import { Select, Spin, Collapse } from "antd";
 import { Address } from "..";
@@ -20,6 +21,7 @@ export default function Owners({ ownerEvents, signaturesRequired, mainnetProvide
   });
 
   const own = [...owners];
+  const pown = [...prevOwners];
   return (
     <Flex direction={"column"} color={"white"} align={"center"}>
       <Heading fontSize={20} py={6} color={"white"}>
@@ -33,33 +35,29 @@ export default function Owners({ ownerEvents, signaturesRequired, mainnetProvide
 
         {own.map((ownerAddress, i) => (
           <ListItem as={Flex} direction="row" align="center" key={i}>
-            <ListIcon as={MdCheckCircle} color="green.500" />
+            <ListIcon as={MdCheckCircle} color="green.300" />
             <Address address={ownerAddress} ensProvider={mainnetProvider} blockExplorer={blockExplorer} fontSize={18} />
           </ListItem>
         ))}
       </List>
-      <Collapse
-        collapsible={prevOwners.size == 0 ? "disabled" : ""}
-        style={{ maxWidth: 400, margin: "auto", marginTop: 10 }}
-      >
-        <Panel header="Previous Owners" key="1">
-          <List
-            dataSource={[...prevOwners]}
-            renderItem={prevOwnerAddress => {
-              return (
-                <List.Item key={"owner_" + prevOwnerAddress}>
-                  <Address
-                    address={prevOwnerAddress}
-                    ensProvider={mainnetProvider}
-                    blockExplorer={blockExplorer}
-                    fontSize={24}
-                  />
-                </List.Item>
-              );
-            }}
-          />
-        </Panel>
-      </Collapse>
+
+      {!pown.length == 0 ?
+      <List>
+        <Heading fontSize={20} py={6} color={"white"}>
+          Previous Owners
+        </Heading>
+        {pown.map((prevOwnerAddress, i) => (
+          <ListItem key={i}>
+            <Address
+              address={prevOwnerAddress}
+              ensProvider={mainnetProvider}
+              blockExplorer={blockExplorer}
+              fontSize={24}
+            />
+          </ListItem>
+        ))}
+      </List>
+      : null }
     </Flex>
   );
 }

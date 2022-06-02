@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Container, Box, Flex, Stack } from "@chakra-ui/react";
+import { Container, Box, Flex, Stack, Button } from "@chakra-ui/react";
 import React from "react";
 import { Balance, Address, TransactionListItem, Owners } from "../components";
 import QR from "qrcode.react";
-import { List, Button } from "antd";
+import { List } from "antd";
 
 export default function Home({
   contractAddress,
@@ -20,7 +20,7 @@ export default function Home({
   return (
     <>
       <Container mt={7} alignItems={'center'}>
-        <Stack align={'center'} boxShadow={'md'}  borderRadius={'30px'} py={"40px"} px={0} bgGradient='linear(to-l, black 70%, gray.800)'>
+        <Stack transition="3s ease" align={'center'} boxShadow={'md'}  borderRadius={'30px'} py={"40px"} px={0} bgGradient='linear(to-l, black 70%, gray.800)'>
           <Flex color={'white'}>
             <Balance
               address={contractAddress ? contractAddress : ""}
@@ -47,15 +47,16 @@ export default function Home({
               fontSize={20}
             />
           </Flex>
+          <Flex>
+        <Button variant={'outline'} rounded={6} onClick={()=>{
+          window.location = "/create"
+        }}>Propose Transaction</Button>
+        </Flex>
         </Stack>
         <Box align='center' color={'white'}>
         <Owners ownerEvents={ownerEvents} signaturesRequired={signaturesRequired} mainnetProvider={mainnetProvider} blockExplorer={blockExplorer} />
         </Box>
-        <div style={{padding:64}}>
-        <Button type={"primary"} onClick={()=>{
-          window.location = "/create"
-        }}>Propose Transaction</Button>
-        </div>
+        
         <List
           bordered
           dataSource={executeTransactionEvents}
