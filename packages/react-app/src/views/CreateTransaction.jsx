@@ -161,7 +161,7 @@ export default function CreateTransaction({
       <div style={{ border: "1px solid #a6a6a6", borderRadius: "10px", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
         <div style={{ margin: 8 }}>
           <Box textAlign={'center'} color={'white'} >
-            <Select value={methodName} onChange={setMethodName}>
+            <Select value={methodName} onChange={(e) => setMethodName(e.target.value) }>
               <option value="transferFunds">Send ETH</option>
               <option value="addSigner">Add Signer</option>
               <option value="removeSigner">Remove Signer</option>
