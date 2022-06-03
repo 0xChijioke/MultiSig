@@ -1,9 +1,9 @@
-import { Badge, Input } from "antd";
 import React, { useCallback, useState } from "react";
 import { ethers } from "ethers";
-import { CameraOutlined, QrcodeOutlined } from "@ant-design/icons";
 import { useLookupAddress } from "eth-hooks/dapps/ens";
 import QrReader from "react-qr-reader";
+import { Input, InputGroup, InputRightElement, InputLeftElement } from "@chakra-ui/react";
+import { MdOutlineQrCodeScanner } from "react-icons/md";
 
 import Blockie from "./Blockie";
 
@@ -105,30 +105,33 @@ export default function AddressInput(props) {
       ) : (
         ""
       )}
-      <Input
-        id="0xAddress" // name it something other than address for auto fill doxxing
-        name="0xAddress" // name it something other than address for auto fill doxxing
-        autoComplete="off"
-        autoFocus={props.autoFocus}
-        placeholder={props.placeholder ? props.placeholder : "address"}
-        prefix={<Blockie address={currentValue} size={8} scale={3} />}
-        value={ethers.utils.isAddress(currentValue) && !isENS(currentValue) && isENS(ens) ? ens : currentValue}
-        addonAfter={
-          <div
-            style={{ marginTop: 4, cursor: "pointer" }}
-            onClick={() => {
-              setScan(!scan);
-            }}
-          >
-            <Badge count={<CameraOutlined style={{ fontSize: 9 }} />}>
-              <QrcodeOutlined style={{ fontSize: 18 }} />
-            </Badge>{" "}
-          </div>
-        }
-        onChange={e => {
-          updateAddress(e.target.value);
-        }}
-      />
+      <InputGroup>
+        <InputLeftElement
+          pointerEvents="none"
+          color="gray.300"
+          fontSize="1.2em"
+          children={<Blockie address={currentValue} size={8} scale={3} />}
+        />
+        <Input
+          id="0xAddress" // name it something other than address for auto fill doxxing
+          name="0xAddress" // name it something other than address for auto fill doxxing
+          autoFocus={props.autoFocus}
+          color="white"
+          w={"100%"}
+          placeholder={props.placeholder ? props.placeholder : "address"}
+          prefix={<Blockie address={currentValue} size={8} scale={3} />}
+          value={ethers.utils.isAddress(currentValue) && !isENS(currentValue) && isENS(ens) ? ens : currentValue}
+          onChange={e => {
+            updateAddress(e.target.value);
+          }}
+        />
+        <InputRightElement
+          children={<MdOutlineQrCodeScanner color="white" />}
+          onClick={() => {
+            setScan(!scan);
+          }}
+        />
+      </InputGroup>
     </div>
   );
 }

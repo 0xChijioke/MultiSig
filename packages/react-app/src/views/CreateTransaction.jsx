@@ -1,16 +1,20 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Input, InputNumber, Space, Tooltip } from "antd";
-import { CodeOutlined } from '@ant-design/icons';
+import { Button, Input, Space, } from "antd";
 import { AddressInput, EtherInput, WalletConnectInput } from "../components";
 import TransactionDetailsModal from "../components/MultiSig/TransactionDetailsModal";
 import { parseExternalContractTransaction } from "../helpers";
 import { useLocalStorage } from "../hooks";
 import { ethers } from "ethers";
 import { parseEther } from "@ethersproject/units";
-import { Box, Image, Select  } from "@chakra-ui/react";
-import { webc } from "../image";
+import { Box, Image, NumberInput, InputGroup, Tooltip,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper, Select  } from "@chakra-ui/react";
+  import { AiOutlineCode } from "react-icons/ai";
+  import { webc } from "../image";
 
 
 const axios = require("axios");
@@ -167,7 +171,7 @@ export default function CreateTransaction({
               <option value="removeSigner">Remove Signer</option>
               <option value="customCallData">Custom Call Data</option>
               <option value="wcCallData">
-                <img src={webc} />WalletConnect
+                <Image src={webc} />WalletConnect
               </option>
             </Select>
           </Box>
@@ -194,19 +198,27 @@ export default function CreateTransaction({
               </div>
               <div style={inputStyle}>
                 {(methodName == "addSigner" || methodName == "removeSigner") &&
-                  <InputNumber
-                    style={{ width: "100%" }}
+                  <NumberInput                    
                     placeholder="New # of signatures required"
                     value={newSignaturesRequired}
+                    color='white'
+                    colorScheme={'white'}
+                    min={1}
                     onChange={(value)=>{
                       setNewSignaturesRequired(value)
                       setHasEdited(true)
                     }}
-                  />
+                    >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
                 }
                 {methodName == "customCallData" &&
                   <>
-                    <Input.Group compact>
+                    <InputGroup >
                       <Input
                         style={{ width: 'calc(100% - 31px)', marginBottom: 20 }}
                         placeholder="Custom call data"
@@ -215,10 +227,11 @@ export default function CreateTransaction({
                           setCustomCallData(e.target.value);
                         }}
                       />
-                      <Tooltip title="Parse transaction data">
-                        <Button onClick={showModal} icon={<CodeOutlined />} />
-                      </Tooltip>
-                    </Input.Group>
+                      <Tooltip hasArrow label="Parse transaction data" bg='gray.600'>
+  <Button onClick={showModal} icon={<AiOutlineCode />}></Button>
+</Tooltip>
+                      
+                    </InputGroup>
                     <TransactionDetailsModal
                       visible={isModalVisible}
                       txnInfo={parsedCustomCallData}
