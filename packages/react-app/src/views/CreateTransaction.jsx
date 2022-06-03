@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Input, InputNumber, Space, Select, Tooltip } from "antd";
+import { Button, Input, InputNumber, Space, Tooltip } from "antd";
 import { CodeOutlined } from '@ant-design/icons';
 import { AddressInput, EtherInput, WalletConnectInput } from "../components";
 import TransactionDetailsModal from "../components/MultiSig/TransactionDetailsModal";
@@ -9,10 +9,9 @@ import { parseExternalContractTransaction } from "../helpers";
 import { useLocalStorage } from "../hooks";
 import { ethers } from "ethers";
 import { parseEther } from "@ethersproject/units";
-import { Box, Image  } from "@chakra-ui/react";
+import { Box, Image, Select  } from "@chakra-ui/react";
 import { webc } from "../image";
 
-const {Option} = Select;
 
 const axios = require("axios");
 
@@ -162,14 +161,14 @@ export default function CreateTransaction({
       <div style={{ border: "1px solid #a6a6a6", borderRadius: "10px", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
         <div style={{ margin: 8 }}>
           <Box textAlign={'center'} color={'white'} >
-            <Select value={methodName} style={{ width: "100%" }} onChange={setMethodName}>
-              <Option key="transferFunds">Send ETH</Option>
-              <Option key="addSigner">Add Signer</Option>
-              <Option key="removeSigner">Remove Signer</Option>
-              <Option key="customCallData">Custom Call Data</Option>
-              <Option key="wcCallData">
-                <img src={webc} style={{ height: 20, width: 20 }} />WalletConnect
-              </Option>
+            <Select value={methodName} onChange={setMethodName}>
+              <option value="transferFunds">Send ETH</option>
+              <option value="addSigner">Add Signer</option>
+              <option value="removeSigner">Remove Signer</option>
+              <option value="customCallData">Custom Call Data</option>
+              <option value="wcCallData">
+                <img src={webc} />WalletConnect
+              </option>
             </Select>
           </Box>
           {methodName == "wcCallData" ? (
