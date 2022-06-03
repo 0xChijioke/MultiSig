@@ -1,5 +1,5 @@
-import { Button, Input, Badge } from "antd";
-import { CameraOutlined, QrcodeOutlined } from "@ant-design/icons";
+import { Button, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { MdOutlineQrCodeScanner } from "react-icons/md";
 import WalletConnect from "@walletconnect/client";
 import QrReader from "react-qr-reader";
 import { useState, useEffect } from "react";
@@ -28,11 +28,15 @@ const WalletConnectInput = ({ chainId, address, loadWalletConnectData, mainnetPr
     }
   }, [walletConnectUri]);
 
-  useEffect(() => {
-    if (address && !isConnected) {
-      resetConnection();
-    }
-  }, [address], isConnected);
+  useEffect(
+    () => {
+      if (address && !isConnected) {
+        resetConnection();
+      }
+    },
+    [address],
+    isConnected,
+  );
 
   const setupAndSubscribe = () => {
     const connector = setupConnector();
@@ -47,7 +51,7 @@ const WalletConnectInput = ({ chainId, address, loadWalletConnectData, mainnetPr
     let connector;
     try {
       connector = new WalletConnect({ uri: walletConnectUri });
-     // return connector;
+      // return connector;
     } catch (error) {
       console.error("setupConnector error:", error);
       localStorage.removeItem("walletConnectUri");
@@ -234,24 +238,21 @@ const WalletConnectInput = ({ chainId, address, loadWalletConnectData, mainnetPr
         ""
       )}
 
-      <Input.Group compact>
+      <InputGroup>
         <Input
-          style={{ width: "calc(100% - 31px)", marginBottom: 20 }}
           placeholder="Paste WalletConnect URI"
           disabled={isConnected}
           value={walletConnectUri}
           onChange={e => setWalletConnectUri(e.target.value)}
         />
-        <Button
+
+        <InputRightElement
+          cursor={"pointer"}
           disabled={isConnected}
+          children={<MdOutlineQrCodeScanner color="white" />}
           onClick={() => setScan(!scan)}
-          icon={
-            <Badge count={<CameraOutlined style={{ fontSize: 9 }} />}>
-              <QrcodeOutlined style={{ fontSize: 18 }} />
-            </Badge>
-          }
         />
-      </Input.Group>
+      </InputGroup>
 
       {isConnected && (
         <>
@@ -263,15 +264,13 @@ const WalletConnectInput = ({ chainId, address, loadWalletConnectData, mainnetPr
               </a>
             </p>
           </div>
-          <Button onClick={killSession} type="primary">
-            Disconnect
-          </Button>
+          <Button onClick={killSession}>Disconnect</Button>
         </>
       )}
 
       {!isConnected && (
         <div
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", marginTop: "20px" }}
           onClick={() => {
             localStorage.removeItem("walletconnect");
             setTimeout(() => {
