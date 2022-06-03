@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect } from "react";
-import { Select, Spin, Collapse } from "antd";
+
 import { Address } from "..";
-import { Flex, Heading, List, ListItem, ListIcon, Box } from "@chakra-ui/react";
+import { Flex, Heading, List, ListItem, ListIcon, Spinner } from "@chakra-ui/react";
 import { MdCheckCircle } from "react-icons/md";
 
-const { Panel } = Collapse;
+
 
 export default function Owners({ ownerEvents, signaturesRequired, mainnetProvider, blockExplorer }) {
   const owners = new Set();
@@ -24,8 +24,8 @@ export default function Owners({ ownerEvents, signaturesRequired, mainnetProvide
   const pown = [...prevOwners];
   return (
     <Flex direction={"column"} color={"white"} align={"center"}>
-      <Heading fontSize={20} py={6} color={"white"}>
-        Signatures Required: {signaturesRequired ? signaturesRequired.toNumber() : <Spin></Spin>}
+      <Heading fontSize={18} py={6} color={"white"}>
+        Signatures Required: {signaturesRequired ? signaturesRequired.toNumber() : <Spinner /> }
       </Heading>
 
       <List>

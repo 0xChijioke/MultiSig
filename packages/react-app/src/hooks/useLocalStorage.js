@@ -37,6 +37,23 @@ export default function useLocalStorage(key, initialValue, ttl) {
       // Save state
       setStoredValue(valueToStore);
       // Save to local storage
+
+      const getCircularReplacer = () => {
+        const seen = new WeakSet();
+        return (key, value) => {
+          if (typeof value === "object" && value !== null) {
+            if (seen.has(value)) {
+              return;
+            }
+            seen.add(value);
+          }
+          return value;
+        };
+      };
+      
+       
+
+
       if (ttl) {
         const now = new Date();
 
@@ -46,9 +63,9 @@ export default function useLocalStorage(key, initialValue, ttl) {
           value: valueToStore,
           expiry: now.getTime() + ttl,
         };
-        window.localStorage.setItem(key, JSON.stringify(item));
+        window.localStorage.setItem(key, JSON.stringify(item, getCircularReplacer()));
       } else {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        window.localStorage.setItem(key, JSON.stringify(valueToStore, getCircularReplacer()));
       }
     } catch (error) {
       // A more advanced implementation would handle the error case

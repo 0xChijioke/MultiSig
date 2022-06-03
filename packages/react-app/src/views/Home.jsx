@@ -5,6 +5,7 @@ import { Balance, Address, TransactionListItem, Owners } from "../components";
 import QR from "qrcode.react";
 import { List } from "antd";
 
+
 export default function Home({
   contractAddress,
   localProvider,
@@ -17,6 +18,7 @@ export default function Home({
   ownerEvents,
   signaturesRequired,
 }) {
+  
   return (
     <>
       <Container mt={7} alignItems={'center'}>
@@ -39,7 +41,7 @@ export default function Home({
               imageSettings={{ excavate: false }}
             />
           </Flex>
-          <Flex p={6}>
+          <Flex color={'gray.800'} p={6}>
             <Address
               address={contractAddress ? contractAddress : ""}
               ensProvider={mainnetProvider}
@@ -48,7 +50,7 @@ export default function Home({
             />
           </Flex>
           <Flex>
-        <Button variant={'outline'} rounded={6} onClick={()=>{
+        <Button variant={'outline'} color='white' borderColor={'gray'} rounded={6} onClick={()=>{
           window.location = "/create"
         }}>Propose Transaction</Button>
         </Flex>
