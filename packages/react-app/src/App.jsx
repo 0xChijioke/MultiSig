@@ -482,7 +482,8 @@ function App(props) {
       </Select.Option>,
     );
   }
-
+  {targetNetwork.map()}
+console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + NETWORKS)
   const networkSelect = (
     <Select
       defaultValue={targetNetwork.name}
@@ -499,6 +500,8 @@ function App(props) {
       {selectNetworkOptions}
     </Select>
   );
+  
+
 
   return (
     <div className="App">
@@ -546,7 +549,7 @@ function App(props) {
         </Stack>
 
         
-          {/* <Stack is direction={'row'}>
+          <Stack is direction={'row'}>
             <Flex>
               <CreateMultiSigModal
                 price={price}
@@ -590,7 +593,7 @@ function App(props) {
                 localProvider={localProvider}
               />
             </Flex>
-          </Stack> */}
+          </Stack>
       
               
 
