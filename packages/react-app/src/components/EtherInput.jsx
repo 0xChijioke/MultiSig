@@ -1,4 +1,4 @@
-import { Input } from "antd";
+import { Input, InputGroup, InputLeftElement, InputRightElement } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 // small change in useEffect, display currentValue if it's provided by user
@@ -42,58 +42,119 @@ export default function EtherInput(props) {
   }, [currentValue]);
 
   return (
-    <Input
-      placeholder={props.placeholder ? props.placeholder : "amount in " + mode}
-      autoFocus={props.autoFocus}
-      prefix={mode === "USD" ? "$" : "Ξ"}
-      value={display}
-      addonAfter={
-        !props.price ? (
-          ""
-        ) : (
-          <div
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              if (mode === "USD") {
-                setMode("ETH");
-                setDisplay(currentValue);
-              } else {
-                setMode("USD");
-                if (currentValue) {
-                  const usdValue = "" + (parseFloat(currentValue) * props.price).toFixed(2);
-                  setDisplay(usdValue);
-                } else {
-                  setDisplay(currentValue);
-                }
+    // <Input
+    //   placeholder={props.placeholder ? props.placeholder : "amount in " + mode}
+    //   autoFocus={props.autoFocus}
+    //   prefix={mode === "USD" ? "$" : "Ξ"}
+    //   value={display}
+    //   addonAfter={
+    //     !props.price ? (
+    //       ""
+    //     ) : (
+    //       <div
+    //         style={{ cursor: "pointer" }}
+    //         onClick={() => {
+    //           if (mode === "USD") {
+    //             setMode("ETH");
+    //             setDisplay(currentValue);
+    //           } else {
+    //             setMode("USD");
+    //             if (currentValue) {
+    //               const usdValue = "" + (parseFloat(currentValue) * props.price).toFixed(2);
+    //               setDisplay(usdValue);
+    //             } else {
+    //               setDisplay(currentValue);
+    //             }
+    //           }
+    //         }}
+    //       >
+    //         {mode === "USD" ? "USD 🔀" : "ETH 🔀"}
+    //       </div>
+    //     )
+    //   }
+    //   onChange={async e => {
+    //     const newValue = e.target.value;
+    //     if (mode === "USD") {
+    //       const possibleNewValue = parseFloat(newValue);
+    //       if (possibleNewValue) {
+    //         const ethValue = possibleNewValue / props.price;
+    //         setValue(ethValue);
+    //         if (typeof props.onChange === "function") {
+    //           props.onChange(ethValue);
+    //         }
+    //         setDisplay(newValue);
+    //       } else {
+    //         setDisplay(newValue);
+    //       }
+    //     } else {
+    //       setValue(newValue);
+    //       if (typeof props.onChange === "function") {
+    //         props.onChange(newValue);
+    //       }
+    //       setDisplay(newValue);
+    //     }
+    //   }}
+    // />
+    <InputGroup>
+      <InputLeftElement pointerEvents="none" color="gray.300" fontSize="1.2em" children={mode === "USD" ? "$" : "Ξ"} />
+      <Input
+        id="0xAddress" // name it something other than address for auto fill doxxing
+        name="0xAddress" // name it something other than address for auto fill doxxing
+        autoFocus={props.autoFocus}
+        color="white"
+        w={"100%"}
+        placeholder={props.placeholder ? props.placeholder : "amount in " + mode}
+        value={display}
+        onChange={async e => {
+          const newValue = e.target.value;
+          if (mode === "USD") {
+            const possibleNewValue = parseFloat(newValue);
+            if (possibleNewValue) {
+              const ethValue = possibleNewValue / props.price;
+              setValue(ethValue);
+              if (typeof props.onChange === "function") {
+                props.onChange(ethValue);
               }
-            }}
-          >
-            {mode === "USD" ? "USD 🔀" : "ETH 🔀"}
-          </div>
-        )
-      }
-      onChange={async e => {
-        const newValue = e.target.value;
-        if (mode === "USD") {
-          const possibleNewValue = parseFloat(newValue);
-          if (possibleNewValue) {
-            const ethValue = possibleNewValue / props.price;
-            setValue(ethValue);
+              setDisplay(newValue);
+            } else {
+              setDisplay(newValue);
+            }
+          } else {
+            setValue(newValue);
             if (typeof props.onChange === "function") {
-              props.onChange(ethValue);
+              props.onChange(newValue);
             }
             setDisplay(newValue);
-          } else {
-            setDisplay(newValue);
           }
-        } else {
-          setValue(newValue);
-          if (typeof props.onChange === "function") {
-            props.onChange(newValue);
-          }
-          setDisplay(newValue);
+        }}
+      />
+      <InputRightElement
+        children={
+          !props.price ? (
+            ""
+          ) : (
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                if (mode === "USD") {
+                  setMode("ETH");
+                  setDisplay(currentValue);
+                } else {
+                  setMode("USD");
+                  if (currentValue) {
+                    const usdValue = "" + (parseFloat(currentValue) * props.price).toFixed(2);
+                    setDisplay(usdValue);
+                  } else {
+                    setDisplay(currentValue);
+                  }
+                }
+              }}
+            >
+              {mode === "USD" ? "USD 🔀" : "ETH 🔀"}
+            </div>
+          )
         }
-      }}
-    />
+      />
+    </InputGroup>
   );
 }

@@ -119,7 +119,6 @@ export default function AddressInput(props) {
           color="white"
           w={"100%"}
           placeholder={props.placeholder ? props.placeholder : "address"}
-          prefix={<Blockie address={currentValue} size={8} scale={3} />}
           value={ethers.utils.isAddress(currentValue) && !isENS(currentValue) && isENS(ens) ? ens : currentValue}
           onChange={e => {
             updateAddress(e.target.value);

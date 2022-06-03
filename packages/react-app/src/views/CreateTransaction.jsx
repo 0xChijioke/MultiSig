@@ -1,21 +1,29 @@
-/* eslint-disable prettier/prettier */
 import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Input, Space, } from "antd";
+import { Button, Space } from "antd";
 import { AddressInput, EtherInput, WalletConnectInput } from "../components";
 import TransactionDetailsModal from "../components/MultiSig/TransactionDetailsModal";
 import { parseExternalContractTransaction } from "../helpers";
 import { useLocalStorage } from "../hooks";
 import { ethers } from "ethers";
 import { parseEther } from "@ethersproject/units";
-import { Box, Image, NumberInput, InputGroup, Tooltip,
+import {
+  Box,
+  Image,
+  NumberInput,
+  InputGroup,
+  Tooltip,
+  Input,
+  InputRightElement,
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
-  NumberDecrementStepper, Select  } from "@chakra-ui/react";
-  import { AiOutlineCode } from "react-icons/ai";
-  import { webc } from "../image";
-
+  NumberDecrementStepper,
+  Select,
+  Icon,
+} from "@chakra-ui/react";
+import { AiOutlineCode } from "react-icons/ai";
+import { webc } from "../image";
 
 const axios = require("axios");
 
@@ -33,8 +41,8 @@ export default function CreateTransaction({
 }) {
   const history = useHistory();
 
-  const [methodName, setMethodName] = useLocalStorage("methodName", "transferFunds")
-  const [newSignaturesRequired, setNewSignaturesRequired] = useState(signaturesRequired)
+  const [methodName, setMethodName] = useLocalStorage("methodName", "transferFunds");
+  const [newSignaturesRequired, setNewSignaturesRequired] = useState(signaturesRequired);
   const [amount, setAmount] = useState("0");
   const [to, setTo] = useLocalStorage("to");
   const [customCallData, setCustomCallData] = useState("");
@@ -43,13 +51,13 @@ export default function CreateTransaction({
   const [loading, setLoading] = useState(false);
   const [isWalletConnectTransaction, setIsWalletConnectTransaction] = useState(false);
 
-  const [hasEdited, setHasEdited] = useState() //we want the signaturesRequired to update from the contract _until_ they edit it
+  const [hasEdited, setHasEdited] = useState(); //we want the signaturesRequired to update from the contract _until_ they edit it
 
-  useEffect(()=>{
-    if(!hasEdited){
-      setNewSignaturesRequired(signaturesRequired)
+  useEffect(() => {
+    if (!hasEdited) {
+      setNewSignaturesRequired(signaturesRequired);
     }
-  },[signaturesRequired])
+  }, [signaturesRequired]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -63,7 +71,7 @@ export default function CreateTransaction({
     const getParsedTransaction = async () => {
       const parsedTransaction = await parseExternalContractTransaction(to, customCallData);
       setParsedCustomCallData(parsedTransaction);
-    }
+    };
 
     getParsedTransaction();
   }, [customCallData]);
@@ -82,12 +90,11 @@ export default function CreateTransaction({
 
   const createTransaction = async () => {
     try {
-
-      //a little security in the frontend just because 
-      if(newSignaturesRequired<1){
-        alert("signatures required must be >= 1")
-      }else{
-        setLoading(true)
+      //a little security in the frontend just because
+      if (newSignaturesRequired < 1) {
+        alert("signatures required must be >= 1");
+      } else {
+        setLoading(true);
 
         let callData;
         let executeToAddress;
@@ -95,7 +102,10 @@ export default function CreateTransaction({
           callData = methodName == "transferFunds" ? "0x" : customCallData;
           executeToAddress = to;
         } else {
-          callData = readContracts[contractName]?.interface?.encodeFunctionData(methodName, [to, newSignaturesRequired]);
+          callData = readContracts[contractName]?.interface?.encodeFunctionData(methodName, [
+            to,
+            newSignaturesRequired,
+          ]);
           executeToAddress = contractAddress;
         }
 
@@ -137,9 +147,7 @@ export default function CreateTransaction({
           console.log("ERROR, NOT OWNER.");
         }
       }
-
-
-    } catch(error) {
+    } catch (error) {
       console.log("Error: ", error);
       setLoading(false);
     }
@@ -147,8 +155,7 @@ export default function CreateTransaction({
 
   return (
     <>
-
-{/* <select
+      {/* <select
             key={methodName}
            onChange={e => setMethodName(e.target.value)}
         >
@@ -162,16 +169,26 @@ export default function CreateTransaction({
               </option>
               </select> */}
 
-      <div style={{ border: "1px solid #a6a6a6", borderRadius: "10px", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
+      <div
+        style={{
+          border: "1px solid #a6a6a6",
+          borderRadius: "10px",
+          padding: 16,
+          width: 400,
+          margin: "auto",
+          marginTop: 64,
+        }}
+      >
         <div style={{ margin: 8 }}>
-          <Box textAlign={'center'} color={'white'} >
-            <Select value={methodName} onChange={(e) => setMethodName(e.target.value) }>
+          <Box textAlign={"center"} color={"white"}>
+            <Select value={methodName} onChange={e => setMethodName(e.target.value)}>
               <option value="transferFunds">Send ETH</option>
               <option value="addSigner">Add Signer</option>
               <option value="removeSigner">Remove Signer</option>
               <option value="customCallData">Custom Call Data</option>
               <option value="wcCallData">
-                <Image src={webc} />WalletConnect
+                <Image src={webc} />
+                WalletConnect
               </option>
             </Select>
           </Box>
@@ -197,41 +214,47 @@ export default function CreateTransaction({
                 />
               </div>
               <div style={inputStyle}>
-                {(methodName == "addSigner" || methodName == "removeSigner") &&
-                  <NumberInput                    
+                {(methodName == "addSigner" || methodName == "removeSigner") && (
+                  <NumberInput
                     placeholder="New # of signatures required"
                     value={newSignaturesRequired}
-                    color='white'
-                    colorScheme={'white'}
+                    color="white"
+                    colorScheme={"white"}
                     min={1}
-                    onChange={(value)=>{
-                      setNewSignaturesRequired(value)
-                      setHasEdited(true)
+                    onChange={value => {
+                      setNewSignaturesRequired(value);
+                      setHasEdited(true);
                     }}
-                    >
+                  >
                     <NumberInputField />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
                       <NumberDecrementStepper />
                     </NumberInputStepper>
                   </NumberInput>
-                }
-                {methodName == "customCallData" &&
+                )}
+                {methodName == "customCallData" && (
                   <>
-                    <InputGroup >
+                    <InputGroup>
                       <Input
-                        style={{ width: 'calc(100% - 31px)', marginBottom: 20 }}
                         placeholder="Custom call data"
                         value={customCallData}
                         onChange={e => {
                           setCustomCallData(e.target.value);
                         }}
                       />
-                      <Tooltip hasArrow label="Parse transaction data" bg='gray.600'>
-  <Button onClick={showModal} icon={<AiOutlineCode />}></Button>
-</Tooltip>
-                      
+
+                      <InputRightElement
+                        onClick={showModal}
+                        children={
+                          <Tooltip hasArrow label="Parse transaction data" bg="gray.600">
+                            <AiOutlineCode size={25} color="white" />
+                          </Tooltip>
+                        }
+                        width="4.5rem"
+                      ></InputRightElement>
                     </InputGroup>
+
                     <TransactionDetailsModal
                       visible={isModalVisible}
                       txnInfo={parsedCustomCallData}
@@ -241,29 +264,19 @@ export default function CreateTransaction({
                       price={price}
                     />
                   </>
-                }
-                {(methodName == "transferFunds" || methodName == "customCallData") &&
-                  <EtherInput
-                    price={price}
-                    mode="USD"
-                    value={amount}
-                    onChange={setAmount}
-                  />
-                }
+                )}
+                {(methodName == "transferFunds" || methodName == "customCallData") && (
+                  <EtherInput price={price} mode="USD" value={amount} onChange={setAmount} />
+                )}
               </div>
               <Space style={{ marginTop: 32 }}>
-                <Button
-                  loading={loading}
-                  onClick={createTransaction}
-                  type="primary"
-                >
+                <Button loading={loading} onClick={createTransaction} type="primary">
                   Propose
                 </Button>
               </Space>
             </>
           )}
         </div>
-
       </div>
     </>
   );
