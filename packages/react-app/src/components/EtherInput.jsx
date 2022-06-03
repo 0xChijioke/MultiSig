@@ -129,12 +129,15 @@ export default function EtherInput(props) {
         }}
       />
       <InputRightElement
+        color={"white"}
+        width="fit-content"
+        pr={3}
         children={
           !props.price ? (
             ""
           ) : (
             <div
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", width: "fit-content" }}
               onClick={() => {
                 if (mode === "USD") {
                   setMode("ETH");
@@ -150,7 +153,7 @@ export default function EtherInput(props) {
                 }
               }}
             >
-              {mode === "USD" ? "USD 🔀" : "ETH 🔀"}
+              {mode === "USD" ? "USD🔀" : "ETH🔀"}
             </div>
           )
         }

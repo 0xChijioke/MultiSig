@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Space } from "antd";
 import { AddressInput, EtherInput, WalletConnectInput } from "../components";
 import TransactionDetailsModal from "../components/MultiSig/TransactionDetailsModal";
 import { parseExternalContractTransaction } from "../helpers";
@@ -20,7 +19,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Select,
-  Icon,
+  Button,
 } from "@chakra-ui/react";
 import { AiOutlineCode } from "react-icons/ai";
 import { webc } from "../image";
@@ -64,7 +63,8 @@ export default function CreateTransaction({
   };
 
   const inputStyle = {
-    padding: 10,
+    
+    marginTop: 25,
   };
 
   useEffect(() => {
@@ -155,20 +155,7 @@ export default function CreateTransaction({
 
   return (
     <>
-      {/* <select
-            key={methodName}
-           onChange={e => setMethodName(e.target.value)}
-        >
-          <option>{methodName}</option>
-          <option key="transferFunds">Send ETH</option>
-              <option key="addSigner">Add Signer</option>
-              <option key="removeSigner">Remove Signer</option>
-              <option key="customCallData">Custom Call Data</option>
-              <option key="wcCallData">
-                WalletConnect
-              </option>
-              </select> */}
-
+      
       <div
         style={{
           border: "1px solid #a6a6a6",
@@ -206,6 +193,7 @@ export default function CreateTransaction({
             <>
               <div style={inputStyle}>
                 <AddressInput
+                  my={6}
                   autoFocus
                   ensProvider={mainnetProvider}
                   placeholder={methodName == "transferFunds" ? "Recepient address" : "Owner address"}
@@ -235,7 +223,7 @@ export default function CreateTransaction({
                 )}
                 {methodName == "customCallData" && (
                   <>
-                    <InputGroup>
+                    <InputGroup my={6}>
                       <Input
                         placeholder="Custom call data"
                         value={customCallData}
@@ -269,11 +257,10 @@ export default function CreateTransaction({
                   <EtherInput price={price} mode="USD" value={amount} onChange={setAmount} />
                 )}
               </div>
-              <Space style={{ marginTop: 32 }}>
-                <Button loading={loading} onClick={createTransaction} type="primary">
-                  Propose
-                </Button>
-              </Space>
+
+              <Button my={6} loading={loading} onClick={createTransaction}>
+                Propose
+              </Button>
             </>
           )}
         </div>
