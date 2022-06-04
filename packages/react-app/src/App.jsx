@@ -477,13 +477,18 @@ function App(props) {
   const selectNetworkOptions = [];
   for (const id in NETWORKS) {
     selectNetworkOptions.push(
+      alert(NETWORKS[id]),
       <Select.Option key={id} value={NETWORKS[id].name}>
         <span style={{ color: NETWORKS[id].color }}>{NETWORKS[id].name}</span>
       </Select.Option>,
     );
   }
-  {targetNetwork.map()}
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + NETWORKS)
+
+  for(var property in targetNetwork) {
+   //(property + "=" + targetNetwork[property]);
+}
+  
+console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + {targetNetwork})
   const networkSelect = (
     <Select
       defaultValue={targetNetwork.name}
@@ -551,6 +556,8 @@ console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         
           <Stack is direction={'row'}>
             <Flex>
+
+
               <CreateMultiSigModal
                 price={price}
                 selectedChainId={selectedChainId}
