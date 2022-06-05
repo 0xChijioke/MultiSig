@@ -1,9 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, InputNumber } from "antd";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Modal,
+  NumberInput,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  useDisclosure,
+  ModalBody,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  ModalCloseButton,
+} from "@chakra-ui/react";
+import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { ethers } from "ethers";
-import { Input } from "antd";
-
+import "./Modal.css";
 import { AddressInput, EtherInput } from "..";
 import CreateModalSentOverlay from "./CreateModalSentOverlay";
 
@@ -161,82 +175,84 @@ export default function CreateMultiSigModal({
       console.log("CREATE MUTLI-SIG SUBMIT FAILED: ", e);
     }
   };
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <Button type="primary" style={{ marginRight: 10 }} onClick={showCreateModal}>
-        Create
-      </Button>
-      <Modal
-        title="Create Multi-Sig Wallet"
-        visible={isCreateModalVisible}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" loading={pendingCreate} onClick={handleSubmit}>
-            Create
-          </Button>,
-        ]}
-      >
-        {txSent && (
-          <CreateModalSentOverlay
-            txError={txError}
-            txSuccess={txSuccess}
-            pendingText="Creating Multi-Sig"
-            successText="Multi-Sig Created"
-            errorText="Transaction Failed"
-          />
-        )}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          {/* <Input
+      <Button onClick={onOpen}>New Wallet</Button>
+
+      <Modal id="modal" isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader align="center" color={"white"}>
+            Create Multi-Sig Wallet
+          </ModalHeader>
+          <ModalCloseButton color={'white'} />
+          <ModalBody>
+            {txSent && (
+              <CreateModalSentOverlay
+                txError={txError}
+                txSuccess={txSuccess}
+                pendingText="Creating Multi-Sig"
+                successText="Multi-Sig Created"
+                errorText="Transaction Failed"
+              />
+            )}
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              {/* <Input
             placeholder="Paste multiple addresses with comma"
             onChange={addMultipleAddress}
             value={multipleAddress}
           /> */}
 
-          {owners.map((owner, index) => (
-            <div key={index} style={{ display: "flex", gap: "1rem" }}>
+              {owners.map((owner, index) => (
+                <div key={index} style={{ alignItems: "center", display: "flex", gap: "1rem" }}>
+                  <div style={{ width: "90%" }}>
+                    <AddressInput
+                      variant="filled"
+                      autoFocus
+                      ensProvider={mainnetProvider}
+                      placeholder={"Owner address"}
+                      value={owner}
+                      onChange={val => updateOwner(val, index)}
+                    />
+                  </div>
+                  {index > 0 && <DeleteIcon onClick={() => removeOwnerField(index)} color="red" />}
+                </div>
+              ))}
+              <div style={{ display: "flex", justifyContent: "flex-end", width: "90%" }}>
+                <AddIcon color={"white"} onClick={addOwnerField} />
+              </div>
               <div style={{ width: "90%" }}>
-                <AddressInput
-                  autoFocus
-                  ensProvider={mainnetProvider}
-                  placeholder={"Owner address"}
-                  value={owner}
-                  onChange={val => updateOwner(val, index)}
+                <NumberInput min={1} color={"white"} onChange={setSignaturesRequired}>
+                  <NumberInputField placeholder="Number of signatures required" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </div>
+              <div style={{ width: "90%" }}>
+                <EtherInput
+                  placeholder="Fund your multi-sig (optional)"
+                  price={price}
+                  mode="USD"
+                  value={amount}
+                  onChange={setAmount}
                 />
               </div>
-              {index > 0 && (
-                <Button style={{ padding: "0 0.5rem" }} danger onClick={() => removeOwnerField(index)}>
-                  <DeleteOutlined />
-                </Button>
-              )}
             </div>
-          ))}
-          <div style={{ display: "flex", justifyContent: "flex-end", width: "90%" }}>
-            <Button onClick={addOwnerField}>
-              <PlusOutlined />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
             </Button>
-          </div>
-          <div style={{ width: "90%" }}>
-            <InputNumber
-              style={{ width: "100%" }}
-              placeholder="Number of signatures required"
-              value={signaturesRequired}
-              onChange={setSignaturesRequired}
-            />
-          </div>
-          <div style={{ width: "90%" }}>
-            <EtherInput
-              placeholder="Fund your multi-sig (optional)"
-              price={price}
-              mode="USD"
-              value={amount}
-              onChange={setAmount}
-            />
-          </div>
-        </div>
+            <Button key="submit" onClick={handleSubmit} loading={pendingCreate} variant="ghost">
+              Create
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
     </>
   );

@@ -491,14 +491,7 @@ function App(props) {
       {NETWORKS.localhost.name}
     </option>,
   ];
-  for (const id in NETWORKS) {
-    console.log(NETWORKS[id].name);
-    selectNetworkOptions.push(
-      <option key={id} value={NETWORKS[id].name}>
-        {NETWORKS[id].name}
-      </option>,
-    );
-  }
+  
 
   console.log(targetNetwork.name);
 
