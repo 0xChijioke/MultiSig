@@ -179,12 +179,16 @@ export default function CreateMultiSigModal({
 
   return (
     <>
-      <Button size={{base: 'xs', lg: 'md'}} colorScheme={'purple'} color='white'  onClick={onOpen}>New Wallet</Button>
+      <Button size={["xs", "xl"]} colorScheme={"purple"} p={2} color="white" onClick={onOpen}>
+        New Wallet
+      </Button>
 
       <Modal id="modal" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textAlign={'center'} color={"white"}>Create Multi-Sig Wallet</ModalHeader>
+          <ModalHeader textAlign={"center"} color={"white"}>
+            Create Multi-Sig Wallet
+          </ModalHeader>
           <ModalCloseButton color={"white"} />
           <ModalBody>
             {txSent && (

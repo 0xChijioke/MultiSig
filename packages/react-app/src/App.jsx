@@ -471,7 +471,6 @@ function App(props) {
 
   const handleMultiSigChange = value => {
     setContractNameForEvent(null);
-   
   };
 
   console.log("currentMultiSigAddress:", currentMultiSigAddress);
@@ -612,7 +611,15 @@ function App(props) {
           </Flex>
         </Stack>
 
-        <Box display="flex" alignItems="center" justifyContent="center" width="100%" mb={2}>
+        <Box
+          as="Flex"
+          direction={{ base: "column", md: "row" }}
+          alignItems="center"
+          my={20}
+          justifyContent="center"
+          width="100%"
+          mb={2}
+        >
           <ButtonGroup gap="6">
             <Button as={CustomLink} to={"/"} color="white" colorScheme={"white"} variant="ghost">
               MultiSig
@@ -635,13 +642,13 @@ function App(props) {
                 h="auto"
                 alignItems="center"
                 // minH={'100vh'}
-                direction={{ base: "column", md: "row" }}
+                direction={{ base: "column", md: "column", lg: "row" }}
               >
-                <Flex px={"auto"} align="center">
-                  <Image h={{base: '200px', lg:"500px"}} w={{base: '300%', lg: "700%"}} src={web} />
+                <Flex my={20} px={"auto"} align="center">
+                  <Image h={{ base: "450px", lg: "500px" }} w={{ base: "460%", lg: "700%" }} src={web} />
                 </Flex>
-                <Stack w={"50%"} direction="column" px={"10px"} align="center">
-                  <Heading fontSize={"60px"} fontWeight={700} color="whiteAlpha.900">
+                <Stack w={{ base: "100%", lg: "50%" }} direction="column" px={"10px"} align="center">
+                  <Heading fontSize={{ base: "30px", md: "60px" }} fontWeight={700} color="whiteAlpha.900">
                     Seccuring assets with a muilti-signature wallet and encouraging social recovery.
                   </Heading>
                   <HStack align={"center"} py={"20px"}>

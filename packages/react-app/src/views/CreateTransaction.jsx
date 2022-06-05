@@ -63,7 +63,6 @@ export default function CreateTransaction({
   };
 
   const inputStyle = {
-    
     marginTop: 25,
   };
 
@@ -155,7 +154,6 @@ export default function CreateTransaction({
 
   return (
     <>
-      
       <div
         style={{
           border: "1px solid #a6a6a6",
@@ -258,7 +256,7 @@ export default function CreateTransaction({
                 )}
               </div>
 
-              <Button colorScheme={'purple'} my={6} loading={loading} onClick={createTransaction}>
+              <Button colorScheme={"purple"} my={6} loading={loading} onClick={createTransaction}>
                 Propose
               </Button>
             </>
