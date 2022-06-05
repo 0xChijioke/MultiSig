@@ -1,13 +1,18 @@
-/* eslint-disable prettier/prettier */
-import { Container, 
+import {
+  Container,
   Flex,
- // Select,
+  // Select,
   Icon,
-  Button, ButtonGroup, Image, Box, Stack, Heading, HStack} from '@chakra-ui/react';
-  import {
-    GrDown
-  } from 'react-icons/gr';
-import { Col, Row, Select } from "antd";
+  Button,
+  ButtonGroup,
+  Image,
+  Box,
+  Stack,
+  Heading,
+  HStack,
+  Select,
+} from "@chakra-ui/react";
+import { GrDown } from "react-icons/gr";
 import "antd/dist/antd.css";
 import {
   useBalance,
@@ -36,7 +41,7 @@ import {
   CreateMultiSigModal,
   ImportMultiSigModal,
 } from "./components";
-import { NETWORKS, ALCHEMY_KEY } from "./constants";
+import { NETWORKS, ALCHEMY_KEY, NETWORK } from "./constants";
 import { web } from "./image";
 import externalContracts from "./contracts/external_contracts";
 //import multiSigWalletABI from "./contracts/multi_sig_wallet";
@@ -45,8 +50,6 @@ import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
 import { Home, Hints, Subgraph, CreateTransaction, Transactions } from "./views";
 import { useStaticJsonRPC, useLocalStorage } from "./hooks";
-
-const { Options } = Select;
 
 const { ethers } = require("ethers");
 
@@ -58,7 +61,7 @@ const DEBUG = true;
 const NETWORKCHECK = true;
 const USE_BURNER_WALLET = true; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = false;
-
+console.log('ddddddddddddddddddddddddddddddddddddddddddddd'+ NETWORKS.mainnet.name)
 const web3Modal = Web3ModalSetup();
 
 const multiSigWalletABI = [
@@ -230,10 +233,12 @@ function App(props) {
     BACKEND_URL = "https://backend.multisig.lol:49899/";
   }
 
-  if(!targetNetwork) targetNetwork = NETWORKS["localhost"];
+  if (!targetNetwork) targetNetwork = NETWORKS["localhost"];
 
   // 🔭 block explorer URL
   const blockExplorer = targetNetwork.blockExplorer;
+
+  console.log(targetNetwork.name + 'ggggggggggggggggggggggggggggggggggggggggggggggggggggggg')
 
   // load all your providers
   const localProvider = useStaticJsonRPC([
@@ -406,8 +411,10 @@ function App(props) {
   }, [allOwnerEvents, currentMultiSigAddress]);
 
   useEffect(() => {
-    const filteredEvents = allExecuteTransactionEvents.filter(contractEvent => contractEvent.address === currentMultiSigAddress);
-    const nonceNum = typeof(nonce) === "number" ? nonce : nonce?.toNumber();
+    const filteredEvents = allExecuteTransactionEvents.filter(
+      contractEvent => contractEvent.address === currentMultiSigAddress,
+    );
+    const nonceNum = typeof nonce === "number" ? nonce : nonce?.toNumber();
     if (nonceNum === filteredEvents.length) {
       setExecuteTransactionEvents(filteredEvents.reverse());
     }
@@ -471,42 +478,38 @@ function App(props) {
 
   console.log("currentMultiSigAddress:", currentMultiSigAddress);
 
-
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
- 
+
   const selectNetworkOptions = [];
   for (const id in NETWORKS) {
+    console.log(NETWORKS[id].name)
     selectNetworkOptions.push(
-      alert(NETWORKS[id]),
-      <Select.Option key={id} value={NETWORKS[id].name}>
+      <option key={id} value={NETWORKS[id].name}>
         <span style={{ color: NETWORKS[id].color }}>{NETWORKS[id].name}</span>
-      </Select.Option>,
+      </option>,
     );
   }
 
-  for(var property in targetNetwork) {
-   //(property + "=" + targetNetwork[property]);
-}
+  console.log(targetNetwork.name)
   
-console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + {targetNetwork})
   const networkSelect = (
     <Select
-      defaultValue={targetNetwork.name}
-      style={{ textAlign: "left", width: 170 }}
-      onChange={value => {
-        if (targetNetwork.chainId != NETWORKS[value].chainId) {
-          window.localStorage.setItem("network", value);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1);
-        }
-      }}
+    color={targetNetwork.color}
+    w='30rem'
+    placeholder={targetNetwork.name}
+    onChange={value => {
+      if (targetNetwork.chainId != NETWORKS[value].chainId) {
+        window.localStorage.setItem("network", value);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1);
+      }
+    }}
     >
       {selectNetworkOptions}
-    </Select>
+  </Select>
   );
-  
-
+  console.log(targetNetwork.name)
 
   return (
     <div className="App">
@@ -553,207 +556,194 @@ console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           />
         </Stack>
 
-        
-          <Stack is direction={'row'}>
-            <Flex>
+        <Stack is direction={"row"}>
+          <Flex>
+            <CreateMultiSigModal
+              price={price}
+              selectedChainId={selectedChainId}
+              mainnetProvider={mainnetProvider}
+              address={address}
+              tx={tx}
+              writeContracts={writeContracts}
+              contractName={"MultiSigFactory"}
+              isCreateModalVisible={isCreateModalVisible}
+              setIsCreateModalVisible={setIsCreateModalVisible}
+            />
+          </Flex>
+          <Flex>
+            <Select
+              w={"100px"}
+              value={[currentMultiSigAddress]}
+              isDisabled={!userHasMultiSigs}
+              onChange={handleMultiSigChange}
+              color="white"
+            >
+              {multiSigs.map((address, index) => (
+                <option key={index} value={address}>
+                  {address}
+                </option>
+              ))}
+            </Select>
+          </Flex>
 
+          <Flex>{networkSelect}</Flex>
+          <Flex>
+            <ImportMultiSigModal
+              mainnetProvider={mainnetProvider}
+              targetNetwork={targetNetwork}
+              networkOptions={selectNetworkOptions}
+              multiSigs={multiSigs}
+              setMultiSigs={setMultiSigs}
+              setCurrentMultiSigAddress={setCurrentMultiSigAddress}
+              multiSigWalletABI={multiSigWalletABI}
+              localProvider={localProvider}
+            />
+          </Flex>
+        </Stack>
 
-              <CreateMultiSigModal
-                price={price}
-                selectedChainId={selectedChainId}
-                mainnetProvider={mainnetProvider}
-                address={address}
-                tx={tx}
-                writeContracts={writeContracts}
-                contractName={"MultiSigFactory"}
-                isCreateModalVisible={isCreateModalVisible}
-                setIsCreateModalVisible={setIsCreateModalVisible}
-              />
-            </Flex>     
-              <Flex >
-                <Select 
-                  w={'100px'} 
-                  value={[currentMultiSigAddress]}
-                  isDisabled={!userHasMultiSigs}
-                  onChange={handleMultiSigChange}
-                  color='white'>
-                  {multiSigs.map((address, index) => (
-                    <option key={index} value={address}>
-                      {address}
-                    </option>
-                  ))}
-                </Select>
-              </Flex>
-            
-            <Flex>
-              {networkSelect}
-            </Flex>
-            <Flex>
-              <ImportMultiSigModal
-                mainnetProvider={mainnetProvider}
-                targetNetwork={targetNetwork}
-                networkOptions={selectNetworkOptions}
-                multiSigs={multiSigs}
-                setMultiSigs={setMultiSigs}
-                setCurrentMultiSigAddress={setCurrentMultiSigAddress}
-                multiSigWalletABI={multiSigWalletABI}
-                localProvider={localProvider}
-              />
-            </Flex>
-          </Stack>
-      
-              
-
-          <Box
-            display='flex'
-            alignItems='center'
-            justifyContent='center'
-            width='100%'
-
-            mb={2}
-          >
-            <ButtonGroup gap='6'>
-              <Button as={CustomLink} to={'/'} color='white' colorScheme={'white'} variant='ghost' >MultiSig</Button>
-              <Button as={CustomLink} to={'/create'} color='white' colorScheme={'white'} variant='ghost' >Transaction</Button>
-              <Button as={CustomLink} to={'/pool'} color='white' colorScheme={'white'} variant='ghost' >Pool</Button>
-            </ButtonGroup>
-          </Box>
-
+        <Box display="flex" alignItems="center" justifyContent="center" width="100%" mb={2}>
+          <ButtonGroup gap="6">
+            <Button as={CustomLink} to={"/"} color="white" colorScheme={"white"} variant="ghost">
+              MultiSig
+            </Button>
+            <Button as={CustomLink} to={"/create"} color="white" colorScheme={"white"} variant="ghost">
+              Transaction
+            </Button>
+            <Button as={CustomLink} to={"/pool"} color="white" colorScheme={"white"} variant="ghost">
+              Pool
+            </Button>
+          </ButtonGroup>
+        </Box>
 
         <Switch>
           <Route exact path="/">
             {!userHasMultiSigs ? (
-              <Stack minH={'500px'} w={'full'} h='auto' alignItems='center'
-            // minH={'100vh'} 
-                direction={{ base: 'column', md: 'row' }}
-                >  
-              <Flex
-                px={'auto'}
-                align='center'
-                >
-                <Image h='500px' w='700%' src={web} />
-              </Flex>
-              <Stack w={'50%'}
-                direction='column'
-                px={'10px'}
-                align='center'>
-                <Heading
-                  fontSize={'60px'}
-                  fontWeight={700}
-                  color='whiteAlpha.900'>
-                  Seccuring assets against single point of failure vulnerabilities.
-                </Heading>
-                <HStack align={'center'} py={'20px'}>
-                  <Flex >
-                    <CreateMultiSigModal
-                      price={price}
-                      selectedChainId={selectedChainId}
-                      mainnetProvider={mainnetProvider}
-                      address={address}
-                      tx={tx}
-                      writeContracts={writeContracts}
-                      contractName={"MultiSigFactory"}
-                      isCreateModalVisible={isCreateModalVisible}
-                      setIsCreateModalVisible={setIsCreateModalVisible}
-                    />
-                  </Flex> 
+              <Stack
+                minH={"500px"}
+                w={"full"}
+                h="auto"
+                alignItems="center"
+                // minH={'100vh'}
+                direction={{ base: "column", md: "row" }}
+              >
+                <Flex px={"auto"} align="center">
+                  <Image h="500px" w="700%" src={web} />
+                </Flex>
+                <Stack w={"50%"} direction="column" px={"10px"} align="center">
+                  <Heading fontSize={"60px"} fontWeight={700} color="whiteAlpha.900">
+                    Seccuring assets against single point of failure vulnerabilities.
+                  </Heading>
+                  <HStack align={"center"} py={"20px"}>
+                    <Flex>
+                      <CreateMultiSigModal
+                        price={price}
+                        selectedChainId={selectedChainId}
+                        mainnetProvider={mainnetProvider}
+                        address={address}
+                        tx={tx}
+                        writeContracts={writeContracts}
+                        contractName={"MultiSigFactory"}
+                        isCreateModalVisible={isCreateModalVisible}
+                        setIsCreateModalVisible={setIsCreateModalVisible}
+                      />
+                    </Flex>
 
-                  <Flex>
-                    <ImportMultiSigModal
-                      mainnetProvider={mainnetProvider}
-                      targetNetwork={targetNetwork}
-                      networkOptions={selectNetworkOptions}
-                      multiSigs={multiSigs}
-                      setMultiSigs={setMultiSigs}
-                      setCurrentMultiSigAddress={setCurrentMultiSigAddress}
-                      multiSigWalletABI={multiSigWalletABI}
-                      localProvider={localProvider}
-                    />
-                  </Flex> 
-                </HStack>
+                    <Flex>
+                      <ImportMultiSigModal
+                        mainnetProvider={mainnetProvider}
+                        targetNetwork={targetNetwork}
+                        networkOptions={selectNetworkOptions}
+                        multiSigs={multiSigs}
+                        setMultiSigs={setMultiSigs}
+                        setCurrentMultiSigAddress={setCurrentMultiSigAddress}
+                        multiSigWalletABI={multiSigWalletABI}
+                        localProvider={localProvider}
+                      />
+                    </Flex>
+                  </HStack>
+                </Stack>
               </Stack>
-            </Stack>
-          ) : (
-            <Home
-              contractAddress={currentMultiSigAddress}
+            ) : (
+              <Home
+                contractAddress={currentMultiSigAddress}
+                localProvider={localProvider}
+                price={price}
+                mainnetProvider={mainnetProvider}
+                blockExplorer={blockExplorer}
+                executeTransactionEvents={executeTransactionEvents}
+                contractName={contractName}
+                readContracts={readContracts}
+                ownerEvents={ownerEvents}
+                signaturesRequired={signaturesRequired}
+              />
+            )}
+          </Route>
+          <Route path="/create">
+            <CreateTransaction
+              poolServerUrl={BACKEND_URL}
+              contractName={contractName}
+              contractAddress={contractAddress}
+              mainnetProvider={mainnetProvider}
               localProvider={localProvider}
               price={price}
-              mainnetProvider={mainnetProvider}
-              blockExplorer={blockExplorer}
-              executeTransactionEvents={executeTransactionEvents}
-              contractName={contractName}
+              tx={tx}
               readContracts={readContracts}
-              ownerEvents={ownerEvents}
+              userSigner={userSigner}
+              DEBUG={DEBUG}
+              nonce={nonce}
+              blockExplorer={blockExplorer}
               signaturesRequired={signaturesRequired}
             />
-          )}
-        </Route>
-        <Route path="/create">
-          <CreateTransaction
-            poolServerUrl={BACKEND_URL}
-            contractName={contractName}
-            contractAddress={contractAddress}
-            mainnetProvider={mainnetProvider}
-            localProvider={localProvider}
-            price={price}
-            tx={tx}
-            readContracts={readContracts}
-            userSigner={userSigner}
-            DEBUG={DEBUG}
-            nonce={nonce}
-            blockExplorer={blockExplorer}
-            signaturesRequired={signaturesRequired}
-          />
-        </Route>
-        <Route path="/pool">
-          <Transactions
-            poolServerUrl={BACKEND_URL}
-            contractName={contractName}
-            address={address}
-            userSigner={userSigner}
-            mainnetProvider={mainnetProvider}
-            localProvider={localProvider}
-            yourLocalBalance={yourLocalBalance}
-            price={price}
-            tx={tx}
-            writeContracts={writeContracts}
-            readContracts={readContracts}
-            blockExplorer={blockExplorer}
-            nonce={nonce}
-            signaturesRequired={signaturesRequired}
-          />
-        </Route>
-        <Route exact path="/debug">
-          <Contract
-            name={"MultiSigFactory"}
-            price={price}
-            signer={userSigner}
-            provider={localProvider}
-            address={address}
-            blockExplorer={blockExplorer}
-            contractConfig={contractConfig}
-          />
-        </Route>
-        <Route path="/hints">
-          <Hints
-            address={address}
-            yourLocalBalance={yourLocalBalance}
-            mainnetProvider={mainnetProvider}
-            price={price}
-          />
-        </Route>
-        <Route path="/mainnetdai">
-          <Contract
-            name="DAI"
-            customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.DAI}
-            signer={userSigner}
-            provider={mainnetProvider}
-            address={address}
-            blockExplorer="https://etherscan.io/"
-            contractConfig={contractConfig}
-            chainId={1}
-          />
-          {/*
+          </Route>
+          <Route path="/pool">
+            <Transactions
+              poolServerUrl={BACKEND_URL}
+              contractName={contractName}
+              address={address}
+              userSigner={userSigner}
+              mainnetProvider={mainnetProvider}
+              localProvider={localProvider}
+              yourLocalBalance={yourLocalBalance}
+              price={price}
+              tx={tx}
+              writeContracts={writeContracts}
+              readContracts={readContracts}
+              blockExplorer={blockExplorer}
+              nonce={nonce}
+              signaturesRequired={signaturesRequired}
+            />
+          </Route>
+          <Route exact path="/debug">
+            <Contract
+              name={"MultiSigFactory"}
+              price={price}
+              signer={userSigner}
+              provider={localProvider}
+              address={address}
+              blockExplorer={blockExplorer}
+              contractConfig={contractConfig}
+            />
+          </Route>
+          <Route path="/hints">
+            <Hints
+              address={address}
+              yourLocalBalance={yourLocalBalance}
+              mainnetProvider={mainnetProvider}
+              price={price}
+            />
+          </Route>
+          <Route path="/mainnetdai">
+            <Contract
+              name="DAI"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.DAI}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer="https://etherscan.io/"
+              contractConfig={contractConfig}
+              chainId={1}
+            />
+            {/*
             <Contract
               name="UNI"
               customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.UNI}
@@ -763,21 +753,19 @@ console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
               blockExplorer="https://etherscan.io/"
             />
             */}
-        </Route>
-        <Route path="/subgraph">
-          <Subgraph
-            subgraphUri={props.subgraphUri}
-            tx={tx}
-            writeContracts={writeContracts}
-            mainnetProvider={mainnetProvider}
-          />
-        </Route>
-      </Switch>
+          </Route>
+          <Route path="/subgraph">
+            <Subgraph
+              subgraphUri={props.subgraphUri}
+              tx={tx}
+              writeContracts={writeContracts}
+              mainnetProvider={mainnetProvider}
+            />
+          </Route>
+        </Switch>
 
-
-
-      {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
-      {/* <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
+        {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
+        {/* <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
         <Row align="middle" gutter={[4, 4]}>
           <Col span={8}>
             <Ramp price={price} address={address} networks={NETWORKS} />
@@ -815,8 +803,8 @@ console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           </Col>
         </Row>
       </div> */}
-    </>
-   </div>
+      </>
+    </div>
   );
 }
 
