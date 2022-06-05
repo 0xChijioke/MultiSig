@@ -179,15 +179,13 @@ export default function CreateMultiSigModal({
 
   return (
     <>
-      <Button onClick={onOpen}>New Wallet</Button>
+      <Button colorScheme={'purple'} color='white' onClick={onOpen}>New Wallet</Button>
 
       <Modal id="modal" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader align="center" color={"white"}>
-            Create Multi-Sig Wallet
-          </ModalHeader>
-          <ModalCloseButton color={'white'} />
+          <ModalHeader textAlign={'center'} color={"white"}>Create Multi-Sig Wallet</ModalHeader>
+          <ModalCloseButton color={"white"} />
           <ModalBody>
             {txSent && (
               <CreateModalSentOverlay
@@ -224,7 +222,7 @@ export default function CreateMultiSigModal({
                 <AddIcon color={"white"} onClick={addOwnerField} />
               </div>
               <div style={{ width: "90%" }}>
-                <NumberInput min={1} color={"white"} onChange={setSignaturesRequired}>
+                <NumberInput borderColor={"gray"} min={1} color={"white"} onChange={setSignaturesRequired}>
                   <NumberInputField placeholder="Number of signatures required" />
                   <NumberInputStepper>
                     <NumberIncrementStepper />
@@ -245,10 +243,18 @@ export default function CreateMultiSigModal({
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="purple" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button key="submit" onClick={handleSubmit} loading={pendingCreate} variant="ghost">
+            <Button
+              color={"white"}
+              key="submit"
+              onClick={handleSubmit}
+              _loading={pendingCreate}
+              variant="ghost"
+              _
+              _hover={{ color: "white" }}
+            >
               Create
             </Button>
           </ModalFooter>

@@ -66,7 +66,15 @@ export default function Account({
 
   return (
     <>
-      <Flex 
+      
+        <div style={{
+          border: "1px solid transparent",
+          borderRadius: "9999px",
+          backgroundColor: "#262626",
+          marginLeft: "0.5rem",
+          padding: "0.375rem 0.875rem",
+        }}>
+          <Flex 
         align={"center"}
         border={1}
         color={'white'}
@@ -83,25 +91,18 @@ export default function Account({
           size={"1.4rem"}
           padding={"0px"}
         />
-        <div style={{
-          border: "1px solid transparent",
-          borderRadius: "9999px",
-          backgroundColor: "#262626",
-          marginLeft: "0.5rem",
-          padding: "0.375rem 0.875rem",
-        }}>
           {address && (
             <Address
               address={address}
               ensProvider={mainnetProvider}
               blockExplorer={blockExplorer}
-              fontSize={"1.125rem"}
+              
               blockieSize={8}
               fontSize={16}
             />
           )}
-        </div>
       </Flex>
+      </div>
       <Button
         m={3}
         color='white'

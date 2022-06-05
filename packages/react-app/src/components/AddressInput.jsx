@@ -118,6 +118,7 @@ export default function AddressInput(props) {
           autoFocus={props.autoFocus}
           color="white"
           w={"100%"}
+          borderColor='gray'
           placeholder={props.placeholder ? props.placeholder : "address"}
           value={ethers.utils.isAddress(currentValue) && !isENS(currentValue) && isENS(ens) ? ens : currentValue}
           onChange={e => {

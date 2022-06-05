@@ -103,6 +103,7 @@ export default function EtherInput(props) {
         autoFocus={props.autoFocus}
         color="white"
         w={"100%"}
+        borderColor='gray'
         placeholder={props.placeholder ? props.placeholder : "amount in " + mode}
         value={display}
         onChange={async e => {

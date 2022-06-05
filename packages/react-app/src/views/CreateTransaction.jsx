@@ -258,7 +258,7 @@ export default function CreateTransaction({
                 )}
               </div>
 
-              <Button my={6} loading={loading} onClick={createTransaction}>
+              <Button colorScheme={'purple'} my={6} loading={loading} onClick={createTransaction}>
                 Propose
               </Button>
             </>
