@@ -61,7 +61,7 @@ const DEBUG = true;
 const NETWORKCHECK = true;
 const USE_BURNER_WALLET = true; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = false;
-console.log('ddddddddddddddddddddddddddddddddddddddddddddd'+ NETWORKS.mainnet.name)
+
 const web3Modal = Web3ModalSetup();
 
 const multiSigWalletABI = [
@@ -225,7 +225,7 @@ function App(props) {
   const location = useLocation();
 
   const cachedNetwork = window.localStorage.getItem("network");
-  let targetNetwork = NETWORKS[cachedNetwork || "mainnet"];
+  let targetNetwork = NETWORKS[cachedNetwork || "rinkeby"];
 
   // backend transaction handler:
   let BACKEND_URL = "http://localhost:49899/";
@@ -238,7 +238,7 @@ function App(props) {
   // 🔭 block explorer URL
   const blockExplorer = targetNetwork.blockExplorer;
 
-  console.log(targetNetwork.name + 'ggggggggggggggggggggggggggggggggggggggggggggggggggggggg')
+  
 
   // load all your providers
   const localProvider = useStaticJsonRPC([
@@ -480,36 +480,54 @@ function App(props) {
 
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
 
-  const selectNetworkOptions = [];
+  const selectNetworkOptions = [
+    <option color={NETWORKS.rinkeby.color} value={NETWORKS.rinkeby.name}>
+      {NETWORKS.rinkeby.name}
+    </option>,
+    <option color={NETWORKS.mainnet.color} value={NETWORKS.mainnet.name}>
+      {NETWORKS.mainnet.name}
+    </option>,
+    <option color={NETWORKS.localhost.color} value={NETWORKS.localhost.name}>
+      {NETWORKS.localhost.name}
+    </option>,
+  ];
   for (const id in NETWORKS) {
-    console.log(NETWORKS[id].name)
+    console.log(NETWORKS[id].name);
     selectNetworkOptions.push(
       <option key={id} value={NETWORKS[id].name}>
-        <span style={{ color: NETWORKS[id].color }}>{NETWORKS[id].name}</span>
+        {NETWORKS[id].name}
       </option>,
     );
   }
 
-  console.log(targetNetwork.name)
-  
+  console.log(targetNetwork.name);
+
   const networkSelect = (
     <Select
-    color={targetNetwork.color}
-    w='30rem'
-    placeholder={targetNetwork.name}
-    onChange={value => {
-      if (targetNetwork.chainId != NETWORKS[value].chainId) {
-        window.localStorage.setItem("network", value);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1);
-      }
-    }}
+      color={"white"}
+      w="fit-content"
+      value={targetNetwork.name}
+      onChange={value => {
+        if (targetNetwork.chainId != NETWORKS.rinkeby.chainId) {
+          window.localStorage.setItem("network", value);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1);
+        }
+      }}
     >
-      {selectNetworkOptions}
-  </Select>
+      <option color={NETWORKS.rinkeby.color} value={NETWORKS.rinkeby.name}>
+        {NETWORKS.rinkeby.name}
+      </option>
+      <option color={NETWORKS.mainnet.color} value={NETWORKS.mainnet.name}>
+        {NETWORKS.mainnet.name}
+      </option>
+      <option color={NETWORKS.localhost.color} value={NETWORKS.localhost.name}>
+        {NETWORKS.localhost.name}
+      </option>
+    </Select>
   );
-  console.log(targetNetwork.name)
+  console.log(targetNetwork.name);
 
   return (
     <div className="App">
