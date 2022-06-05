@@ -71,7 +71,6 @@ export default function Account({
           border: "1px solid transparent",
           borderRadius: "9999px",
           backgroundColor: "#262626",
-          marginLeft: "0.5rem",
           padding: "0.375rem 0.875rem",
         }}>
           <Flex 

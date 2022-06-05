@@ -238,8 +238,6 @@ function App(props) {
   // 🔭 block explorer URL
   const blockExplorer = targetNetwork.blockExplorer;
 
-  
-
   // load all your providers
   const localProvider = useStaticJsonRPC([
     process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : targetNetwork.rpcUrl,
@@ -473,7 +471,7 @@ function App(props) {
 
   const handleMultiSigChange = value => {
     setContractNameForEvent(null);
-    setCurrentMultiSigAddress(value);
+   
   };
 
   console.log("currentMultiSigAddress:", currentMultiSigAddress);
@@ -491,7 +489,6 @@ function App(props) {
       {NETWORKS.localhost.name}
     </option>,
   ];
-  
 
   console.log(targetNetwork.name);
 
@@ -499,7 +496,7 @@ function App(props) {
     <Select
       color={"white"}
       w="fit-content"
-      value={targetNetwork.name}
+      placeholder={targetNetwork.name}
       onChange={value => {
         if (targetNetwork.chainId != NETWORKS.rinkeby.chainId) {
           window.localStorage.setItem("network", value);
@@ -585,8 +582,11 @@ function App(props) {
             <Select
               w={"100px"}
               value={[currentMultiSigAddress]}
-              isDisabled={!userHasMultiSigs}
-              onChange={handleMultiSigChange}
+              //isDisabled={!userHasMultiSigs}
+              onChange={function (e) {
+                setCurrentMultiSigAddress(e.target.value);
+                handleMultiSigChange();
+              }}
               color="white"
             >
               {multiSigs.map((address, index) => (
@@ -638,11 +638,11 @@ function App(props) {
                 direction={{ base: "column", md: "row" }}
               >
                 <Flex px={"auto"} align="center">
-                  <Image h="500px" w="700%" src={web} />
+                  <Image h={{base: '200px', lg:"500px"}} w={{base: '300%', lg: "700%"}} src={web} />
                 </Flex>
                 <Stack w={"50%"} direction="column" px={"10px"} align="center">
                   <Heading fontSize={"60px"} fontWeight={700} color="whiteAlpha.900">
-                    Seccuring assets against single point of failure vulnerabilities.
+                    Seccuring assets with a muilti-signature wallet and encouraging social recovery.
                   </Heading>
                   <HStack align={"center"} py={"20px"}>
                     <Flex>

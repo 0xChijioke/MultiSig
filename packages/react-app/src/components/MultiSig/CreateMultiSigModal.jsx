@@ -179,7 +179,7 @@ export default function CreateMultiSigModal({
 
   return (
     <>
-      <Button colorScheme={'purple'} color='white' onClick={onOpen}>New Wallet</Button>
+      <Button size={{base: 'xs', lg: 'md'}} colorScheme={'purple'} color='white'  onClick={onOpen}>New Wallet</Button>
 
       <Modal id="modal" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
