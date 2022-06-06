@@ -1,5 +1,5 @@
 import React from "react";
-import { Spinner } from '@chakra-ui/icons';
+import { Spinner } from '@chakra-ui/react';
 import { CheckCircleOutlined, StopOutlined } from '@ant-design/icons';
 
 export default function CreateModalSentOverlay(props) {
@@ -37,7 +37,7 @@ export default function CreateModalSentOverlay(props) {
         <>
           <div style={{ fontSize: '1.5rem' }}>{props.pendingText}</div>
           <div style={{ height: '4rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Spin size="large" style={{ transform: 'scale(1.5)' }} />
+            <Spinner size="lg" style={{ transform: 'scale(1.5)' }} />
           </div>
         </>
       )}
