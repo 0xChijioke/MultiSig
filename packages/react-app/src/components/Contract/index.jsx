@@ -1,4 +1,4 @@
-// import { Card } from "antd";
+// import { Flex } from "@chakra-ui/react";
 // import React, { useMemo, useState } from "react";
 // import { useContractExistsAtAddress, useContractLoader } from "eth-hooks";
 
@@ -118,22 +118,22 @@
 
 //   return (
 //     <div style={{ margin: "auto", width: "70vw" }}>
-//       <Card
+//       <Flex
+//         loading={contractDisplay && contractDisplay.length <= 0}
 //         title={
-//           <div style={{fontSize:24}}>
+//           <div style={{ fontSize: 24 }}>
 //             {name}
 //             <div style={{ float: "right" }}>
-//               <Address value={address}/>
+//               <Address value={address} />
 //               <Balance address={address} provider={provider} price={price} />
 //             </div>
 //           </div>
 //         }
 //         size="large"
 //         style={{ marginTop: 25, width: "100%" }}
-//         loading={contractDisplay && contractDisplay.length <= 0}
 //       >
 //         {contractIsDeployed ? contractDisplay : noContractDisplay}
-//       </Card>
+//       </Flex>
 //     </div>
 //   );
 // }

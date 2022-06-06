@@ -1,17 +1,4 @@
-import {
-  Container,
-  Flex,
-  // Select,
-  Icon,
-  Button,
-  ButtonGroup,
-  Image,
-  Box,
-  Stack,
-  Heading,
-  HStack,
-  Select,
-} from "@chakra-ui/react";
+import { Flex, Select, Button, ButtonGroup, Image, Box, Stack, Heading, HStack } from "@chakra-ui/react";
 import { GrDown } from "react-icons/gr";
 import {
   useBalance,
@@ -28,17 +15,12 @@ import { Route, Switch, useLocation } from "react-router-dom";
 import "./App.css";
 import {
   Account,
-  Contract,
-  Faucet,
-  GasGauge,
+  
   CustomLink,
   Header,
-  Ramp,
   NetworkDisplay,
-  FaucetHint,
-  NetworkSwitch,
+  //NetworkSwitch,
   CreateMultiSigModal,
-  ImportMultiSigModal,
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY, NETWORK } from "./constants";
 import { web } from "./image";
@@ -47,7 +29,7 @@ import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, Hints, Subgraph, CreateTransaction, Transactions } from "./views";
+import { Home, CreateTransaction, Transactions } from "./views";
 import { useStaticJsonRPC, useLocalStorage } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -56,9 +38,9 @@ const { ethers } = require("ethers");
 const initialNetwork = NETWORKS.mainnet; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
-const DEBUG = true;
+const DEBUG = false;
 const NETWORKCHECK = true;
-const USE_BURNER_WALLET = true; // toggle burner wallet feature
+const USE_BURNER_WALLET = false; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = false;
 
 const web3Modal = Web3ModalSetup();
@@ -476,17 +458,7 @@ function App(props) {
 
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
 
-  const selectNetworkOptions = [
-    <option color={NETWORKS.rinkeby.color} value={NETWORKS.rinkeby.name}>
-      {NETWORKS.rinkeby.name}
-    </option>,
-    <option color={NETWORKS.mainnet.color} value={NETWORKS.mainnet.name}>
-      {NETWORKS.mainnet.name}
-    </option>,
-    <option color={NETWORKS.localhost.color} value={NETWORKS.localhost.name}>
-      {NETWORKS.localhost.name}
-    </option>,
-  ];
+  
 
   console.log(targetNetwork.name);
 
@@ -514,6 +486,9 @@ function App(props) {
       <option color={NETWORKS.localhost.color} value={NETWORKS.localhost.name}>
         {NETWORKS.localhost.name}
       </option>
+      <option color={NETWORKS.goerli.color} value={NETWORKS.goerli.name}>
+        {NETWORKS.goerli.name}
+      </option>
     </Select>
   );
   console.log(targetNetwork.name);
@@ -526,7 +501,7 @@ function App(props) {
             {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
             <div style={{ position: "relative" }}>
               <div style={{ display: "flex", flex: 1, alignItems: "center", padding: "0.5rem 0" }}>
-                {USE_NETWORK_SELECTOR && (
+                {/* {USE_NETWORK_SELECTOR && (
                   <div style={{ marginRight: 20 }}>
                     <NetworkSwitch
                       networkOptions={networkOptions}
@@ -534,7 +509,7 @@ function App(props) {
                       setSelectedNetwork={setSelectedNetwork}
                     />
                   </div>
-                )}
+                )} */}
                 <Account
                   useBurner={USE_BURNER_WALLET}
                   address={address}
@@ -548,9 +523,9 @@ function App(props) {
                   blockExplorer={blockExplorer}
                 />
               </div>
-              {yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
+              {/* {yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
                 <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />
-              )}
+              )} */}
             </div>
           </Header>
           <NetworkDisplay
@@ -707,7 +682,7 @@ function App(props) {
               signaturesRequired={signaturesRequired}
             />
           </Route>
-          <Route exact path="/debug">
+          {/* <Route exact path="/debug">
             <Contract
               name={"MultiSigFactory"}
               price={price}
@@ -736,8 +711,8 @@ function App(props) {
               blockExplorer="https://etherscan.io/"
               contractConfig={contractConfig}
               chainId={1}
-            />
-            {/*
+            /> */}
+          {/*
             <Contract
               name="UNI"
               customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.UNI}
@@ -747,7 +722,7 @@ function App(props) {
               blockExplorer="https://etherscan.io/"
             />
             */}
-          </Route>
+          {/* </Route>
           <Route path="/subgraph">
             <Subgraph
               subgraphUri={props.subgraphUri}
@@ -755,7 +730,7 @@ function App(props) {
               writeContracts={writeContracts}
               mainnetProvider={mainnetProvider}
             />
-          </Route>
+          </Route> */}
         </Switch>
 
         {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}

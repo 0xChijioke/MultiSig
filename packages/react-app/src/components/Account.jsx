@@ -4,7 +4,7 @@ import React from "react";
 
 import Address from "./Address";
 import Balance from "./Balance";
-import Wallet from "./Wallet";
+
 
 /**
   ~ What it does? ~
@@ -80,16 +80,7 @@ export default function Account({
         spacing={3}
       >
         <Balance address={address} provider={localProvider} price={price} size={"1.125rem"} />
-        <Wallet
-          address={address}
-          provider={localProvider}
-          signer={userSigner}
-          ensProvider={mainnetProvider}
-          price={price}
-          color={"#2caad9"}
-          size={"1.4rem"}
-          padding={"0px"}
-        />
+        
           {address && (
             <Address
               address={address}

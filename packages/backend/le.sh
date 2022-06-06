@@ -1,6 +1,6 @@
 #/bin/bash
 
-DOMAIN="backend.multisig.lol"
+DOMAIN="multisigback.heroku.app"
 
 sudo certbot certonly --standalone -d $DOMAIN --config-dir ~/.certbot/config --logs-dir ~/.certbot/logs --work-dir ~/.certbot/work
 sudo cp -f ~/.certbot/config/live/$DOMAIN/privkey.pem server.key;sudo chmod 0777 server.key
