@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Container, Box, Flex, Stack, Button } from "@chakra-ui/react";
+import { Container, Box, Flex, Stack, Button, List } from "@chakra-ui/react";
 import React from "react";
-import { Balance, Address, TransactionListItem, Owners } from "../components";
+import { Balance, Address, TransactionListItem, Owners, CustomLink } from "../components";
 import QR from "qrcode.react";
-import { List } from "antd";
+
 
 
 export default function Home({
@@ -50,9 +50,7 @@ export default function Home({
             />
           </Flex>
           <Flex>
-        <Button variant={'outline'} color='white' borderColor={'gray'} rounded={6} onClick={()=>{
-          window.location = "/create"
-        }}>Propose Transaction</Button>
+        <Button  as={CustomLink} to={"/create"} variant={'outline'} color='white' colorScheme={'white'} borderColor={'gray'} rounded={6}>Propose Transaction</Button>
         </Flex>
         </Stack>
         <Box align='center' color={'white'}>
@@ -60,7 +58,6 @@ export default function Home({
         </Box>
         
         <List
-          bordered
           dataSource={executeTransactionEvents}
           renderItem={item => {
             return (

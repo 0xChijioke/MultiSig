@@ -172,10 +172,7 @@ export default function CreateTransaction({
               <option value="addSigner">Add Signer</option>
               <option value="removeSigner">Remove Signer</option>
               <option value="customCallData">Custom Call Data</option>
-              <option value="wcCallData">
-                <Image src={webc} />
-                WalletConnect
-              </option>
+              <option value="wcCallData">WalletConnect </option>
             </Select>
           </Box>
           {methodName == "wcCallData" ? (
@@ -225,6 +222,7 @@ export default function CreateTransaction({
                     <InputGroup my={6}>
                       <Input
                         placeholder="Custom call data"
+                        color={'white'}
                         value={customCallData}
                         onChange={e => {
                           setCustomCallData(e.target.value);

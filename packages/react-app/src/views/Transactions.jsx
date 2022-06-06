@@ -62,6 +62,7 @@ export default function Transactions({
     if (readContracts[contractName]) getTransactions();
   }, 3777);
 
+  const trans = [...transactions];
   const getSortedSigList = async (allSigs, newHash) => {
     const sigList = [];
     for (const sig in allSigs) {
@@ -109,10 +110,8 @@ export default function Transactions({
         </b>
       </h1>
 
-      <List
-        bordered
-        dataSource={transactions}
-        renderItem={item => {
+      <List>
+        {trans.map(item => {
           const hasSigned = item.signers.indexOf(address) >= 0;
           const hasEnoughSignatures = item.signatures.length <= signaturesRequired.toNumber();
 
@@ -197,8 +196,8 @@ export default function Transactions({
               </div>
             </TransactionListItem>
           );
-        }}
-      />
+        })}
+      </List>
     </div>
   );
 }

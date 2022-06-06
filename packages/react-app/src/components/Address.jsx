@@ -96,7 +96,6 @@ export default function Address(props) {
             </Flex>
           )}
         </span>
-        {hasCopied && toast({ description: "copied!" })}
       </div>
     </>
   );

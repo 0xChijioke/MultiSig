@@ -1,3 +1,8 @@
 #chakra-modal-modal {
     background-color: black;
+    
+}
+#chakra-modal-none {
+    display: none;
+
 }

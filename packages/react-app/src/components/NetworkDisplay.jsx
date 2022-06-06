@@ -1,4 +1,4 @@
-import { Alert, Button } from "antd";
+import { Alert, AlertDescription, AlertTitle, Box, Button, CloseButton, useDisclosure } from "@chakra-ui/react";
 import React from "react";
 
 import { NETWORK } from "../constants";
@@ -11,6 +11,7 @@ function NetworkDisplay({
   USE_NETWORK_SELECTOR,
   logoutOfWeb3Modal,
 }) {
+  const { isOpen: isVisible, onClose, onOpen } = useDisclosure();
   let networkDisplay = "";
   if (NETWORKCHECK && localChainId && selectedChainId && localChainId !== selectedChainId) {
     const networkSelected = NETWORK(selectedChainId);
@@ -18,73 +19,75 @@ function NetworkDisplay({
     if (selectedChainId === 1337 && localChainId === 31337) {
       networkDisplay = (
         <div style={{ zIndex: 2, position: "absolute", right: 0, top: 60, padding: 16 }}>
-          <Alert
-            message="⚠️ Wrong Network ID"
-            description={
-              <div>
-                You have <b>chain id 1337</b> for localhost and you need to change it to <b>31337</b> to work with
-                HardHat.
-                <div>(MetaMask -&gt; Settings -&gt; Networks -&gt; Chain ID -&gt; 31337)</div>
-              </div>
-            }
-            type="error"
-            closable={false}
-          />
+          <Alert status="error">
+            <Box>
+              <AlertTitle>⚠️ Wrong Network ID</AlertTitle>
+              <AlertDescription>
+                <div>
+                  You have <b>chain id 1337</b> for localhost and you need to change it to <b>31337</b> to work with
+                  HardHat.
+                  <div>(MetaMask -&gt; Settings -&gt; Networks -&gt; Chain ID -&gt; 31337)</div>
+                </div>
+              </AlertDescription>
+            </Box>
+            <CloseButton alignSelf="flex-start" position="relative" right={-1} top={-1} onClick={onClose} />
+          </Alert>
         </div>
       );
     } else {
       networkDisplay = (
         <div style={{ zIndex: 2, position: "absolute", right: 0, top: 60, padding: 16 }}>
-          <Alert
-            message="⚠️ Wrong Network"
-            description={
-              <div>
-                You have <b>{networkSelected && networkSelected.name}</b> selected and you need to be on{" "}
-                <Button
-                  onClick={async () => {
-                    const ethereum = window.ethereum;
-                    const data = [
-                      {
-                        chainId: "0x" + targetNetwork.chainId.toString(16),
-                        chainName: targetNetwork.name,
-                        nativeCurrency: targetNetwork.nativeCurrency,
-                        rpcUrls: [targetNetwork.rpcUrl],
-                        blockExplorerUrls: [targetNetwork.blockExplorer],
-                      },
-                    ];
-                    console.log("data", data);
+          <Alert status="error">
+            <Box>
+              <AlertTitle>⚠️ Wrong Network ID</AlertTitle>
+              <AlertDescription>
+                <div>
+                  You have <b>{networkSelected && networkSelected.name}</b> selected and you need to be on{" "}
+                  <Button
+                    onClick={async () => {
+                      const ethereum = window.ethereum;
+                      const data = [
+                        {
+                          chainId: "0x" + targetNetwork.chainId.toString(16),
+                          chainName: targetNetwork.name,
+                          nativeCurrency: targetNetwork.nativeCurrency,
+                          rpcUrls: [targetNetwork.rpcUrl],
+                          blockExplorerUrls: [targetNetwork.blockExplorer],
+                        },
+                      ];
+                      console.log("data", data);
 
-                    let switchTx;
-                    // https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
-                    try {
-                      switchTx = await ethereum.request({
-                        method: "wallet_switchEthereumChain",
-                        params: [{ chainId: data[0].chainId }],
-                      });
-                    } catch (switchError) {
-                      // not checking specific error code, because maybe we're not using MetaMask
+                      let switchTx;
+                      // https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
                       try {
                         switchTx = await ethereum.request({
-                          method: "wallet_addEthereumChain",
-                          params: data,
+                          method: "wallet_switchEthereumChain",
+                          params: [{ chainId: data[0].chainId }],
                         });
-                      } catch (addError) {
-                        // handle "add" error
+                      } catch (switchError) {
+                        // not checking specific error code, because maybe we're not using MetaMask
+                        try {
+                          switchTx = await ethereum.request({
+                            method: "wallet_addEthereumChain",
+                            params: data,
+                          });
+                        } catch (addError) {
+                          // handle "add" error
+                        }
                       }
-                    }
 
-                    if (switchTx) {
-                      console.log(switchTx);
-                    }
-                  }}
-                >
-                  <b>{networkLocal && networkLocal.name}</b>
-                </Button>
-              </div>
-            }
-            type="error"
-            closable={false}
-          />
+                      if (switchTx) {
+                        console.log(switchTx);
+                      }
+                    }}
+                  >
+                    <b>{networkLocal && networkLocal.name}</b>
+                  </Button>
+                </div>
+              </AlertDescription>
+            </Box>
+            <CloseButton alignSelf="flex-start" position="relative" right={-1} top={-1} onClick={onClose} />
+          </Alert>
         </div>
       );
     }

@@ -14,12 +14,15 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   ModalCloseButton,
+  toast,
+  useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { ethers } from "ethers";
 import "./Modal.css";
 import { AddressInput, EtherInput } from "..";
-import CreateModalSentOverlay from "./CreateModalSentOverlay";
+
 
 export default function CreateMultiSigModal({
   price,
@@ -40,6 +43,7 @@ export default function CreateMultiSigModal({
   const [signaturesRequired, setSignaturesRequired] = useState(false);
   const [amount, setAmount] = useState("0");
   const [owners, setOwners] = useState([""]);
+  const toast = useToast();
 
   useEffect(() => {
     if (address) {
@@ -148,11 +152,25 @@ export default function CreateMultiSigModal({
             console.log("tx update error!");
             setPendingCreate(false);
             setTxError(true);
+            toast({
+              title: "Error.",
+              description: "Something went wrong, please try again.",
+              status: "error",
+              duration: 9000,
+              isClosable: true,
+            });
           }
 
           if (update && update.code) {
             setPendingCreate(false);
             setTxSent(false);
+            toast({
+              title: "Error.",
+              description: "Something went wrong, please try again.",
+              status: "error",
+              duration: 9000,
+              isClosable: true,
+            });
           }
 
           if (update && (update.status === "confirmed" || update.status === 1)) {
@@ -161,6 +179,15 @@ export default function CreateMultiSigModal({
             setTxSuccess(true);
             setTimeout(() => {
               setIsCreateModalVisible(false);
+
+              toast({
+                title: "Account created.",
+                description: "We've created your multi-sig wallet for you.",
+                status: "success",
+                duration: 9000,
+                isClosable: true,
+              });
+
               resetState();
             }, 2500);
           }
@@ -183,7 +210,7 @@ export default function CreateMultiSigModal({
         New Wallet
       </Button>
 
-      <Modal id="modal" isOpen={isOpen} onClose={onClose}>
+      <Modal id={pendingCreate ? "none" : "modal"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign={"center"} color={"white"}>
@@ -191,15 +218,6 @@ export default function CreateMultiSigModal({
           </ModalHeader>
           <ModalCloseButton color={"white"} />
           <ModalBody>
-            {txSent && (
-              <CreateModalSentOverlay
-                txError={txError}
-                txSuccess={txSuccess}
-                pendingText="Creating Multi-Sig"
-                successText="Multi-Sig Created"
-                errorText="Transaction Failed"
-              />
-            )}
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               {/* <Input
             placeholder="Paste multiple addresses with comma"

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Button, Box, Flex } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
 import React from "react";
 
 import Address from "./Address";

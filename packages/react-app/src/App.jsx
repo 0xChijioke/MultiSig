@@ -497,9 +497,9 @@ function App(props) {
       color={"white"}
       w="fit-content"
       placeholder={targetNetwork.name}
-      onChange={value => {
+      onChange={e => {
         if (targetNetwork.chainId != NETWORKS.rinkeby.chainId) {
-          window.localStorage.setItem("network", value);
+          window.localStorage.setItem("network", e.target.value);
           setTimeout(() => {
             window.location.reload();
           }, 1);
@@ -564,7 +564,7 @@ function App(props) {
           />
         </Stack>
 
-        <Stack align={"center"} direction={{ base: "column", md: "column", lg: "row" }}>
+        <Stack my={9} align={"center"} direction={"row"}>
           <Flex>
             <CreateMultiSigModal
               price={price}
@@ -639,10 +639,10 @@ function App(props) {
                 </Flex>
                 <Stack w={{ base: "100%", lg: "50%" }} direction="column" px={"10px"} align="center">
                   <Heading fontSize={{ base: "30px", md: "60px" }} fontWeight={700} color="whiteAlpha.900">
-                    Seccuring assets with a muilti-signature wallet and encouraging social recovery.
+                    Built with 💖 and Schafold-eth.
                   </Heading>
                   <HStack align={"center"} py={"20px"}>
-                    <Flex>
+                    <Flex my={8}>
                       <CreateMultiSigModal
                         price={price}
                         selectedChainId={selectedChainId}
