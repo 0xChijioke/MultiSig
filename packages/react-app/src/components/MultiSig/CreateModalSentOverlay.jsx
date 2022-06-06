@@ -1,5 +1,5 @@
 import React from "react";
-import { Spin } from 'antd';
+import { Spinner } from '@chakra-ui/icons';
 import { CheckCircleOutlined, StopOutlined } from '@ant-design/icons';
 
 export default function CreateModalSentOverlay(props) {

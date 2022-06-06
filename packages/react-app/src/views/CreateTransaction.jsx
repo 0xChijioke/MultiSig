@@ -233,6 +233,7 @@ export default function CreateTransaction({
 
                       <InputRightElement
                         onClick={showModal}
+                        color='white'
                         children={
                           <Tooltip hasArrow label="Parse transaction data" bg="gray.600">
                             <AiOutlineCode size={25} color="white" />

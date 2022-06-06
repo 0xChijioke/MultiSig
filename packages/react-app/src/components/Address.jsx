@@ -1,12 +1,10 @@
-/* eslint-disable prettier/prettier */
-
-import { Button, Box, Flex, Text } from '@chakra-ui/react';import { Skeleton } from "antd";
+import { Button, Box, Flex, Text, Spinner, useClipboard, toast, useToast } from "@chakra-ui/react";
 import React from "react";
 import Blockies from "react-blockies";
 import { useLookupAddress } from "eth-hooks/dapps/ens";
+import { CopyIcon } from "@chakra-ui/icons";
 
 // changed value={address} to address={address}
-
 
 /**
   ~ What it does? ~
@@ -40,6 +38,8 @@ export default function Address(props) {
   const validEnsCheck = ensSplit && ensSplit[ensSplit.length - 1] === "eth";
   const etherscanLink = blockExplorerLink(address, props.blockExplorer);
   let displayAddress = address?.substr(0, 5) + "..." + address?.substr(-4);
+  const { hasCopied, onCopy } = useClipboard(address);
+  const toast = useToast();
 
   if (validEnsCheck) {
     displayAddress = ens;
@@ -50,25 +50,16 @@ export default function Address(props) {
   }
 
   if (!address) {
-    return (
-      <span>
-        <Skeleton avatar paragraph={{ rows: 1 }} />
-      </span>
-    );
+    return <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="purple.500" size="xl" />;
   }
 
   if (props.minimized) {
     return (
       <span style={{ verticalAlign: "middle" }}>
-        <a
-          style={{ color: "#ffff" }}
-          target="_blank"
-          href={etherscanLink}
-          rel="noopener noreferrer"
-        >
-         <span style={{ overflow: 'hidden', borderRadius: '50%'}}>
-          <Blockies seed={address.toLowerCase()} size={props.blockieSize ? props.blockieSize : 8} scale={2} />
-        </span>
+        <a style={{ color: "#ffff" }} target="_blank" href={etherscanLink} rel="noopener noreferrer">
+          <span style={{ overflow: "hidden", borderRadius: "50%" }}>
+            <Blockies seed={address.toLowerCase()} size={props.blockieSize ? props.blockieSize : 8} scale={2} />
+          </span>
         </a>
       </span>
     );
@@ -76,36 +67,37 @@ export default function Address(props) {
 
   return (
     <>
-    <div style={{ display: "flex", alignItems: "center" }}>
-    <span style={{ overflow: 'hidden', borderRadius: '50%'}}>
-      <Blockies seed={address.toLowerCase()} size={props.blockieSize ? props.blockieSize : 8} scale={props.fontSize ? props.fontSize / 7 : 4} />
-    </span>
-      <span style={{paddingLeft: 5, fontSize: props.fontSize ? props.fontSize : 28 }}>
-        {props.onChange ? (
-          <Text editable={{ onChange: props.onChange }} copyable={{ text: address }}>
-            <a
-              style={{ color: "#ffff" }}
-              target="_blank"
-              href={etherscanLink}
-              rel="noopener noreferrer"
-            >
-              {displayAddress}
-            </a>
-          </Text>
-        ) : (
-          <Text copyable={{ text: address }}>
-            <a
-              style={{ color: "#fff" }}
-              target="_blank"
-              href={etherscanLink}
-              rel="noopener noreferrer"
-            >
-              {displayAddress}
-            </a>
-          </Text>
-        )}
-      </span>
-    </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <span style={{ overflow: "hidden", borderRadius: "50%" }}>
+          <Blockies
+            seed={address.toLowerCase()}
+            size={props.blockieSize ? props.blockieSize : 8}
+            scale={props.fontSize ? props.fontSize / 7 : 4}
+          />
+        </span>
+        <span style={{ paddingLeft: 5, fontSize: props.fontSize ? props.fontSize : 28 }}>
+          {props.onChange ? (
+            <Flex align={"center"}>
+              <Text editable={{ onChange: props.onChange }} copyable={{ text: address }}>
+                <a style={{ color: "#ffff" }} target="_blank" href={etherscanLink} rel="noopener noreferrer">
+                  {displayAddress}
+                </a>
+              </Text>
+              <CopyIcon size={59} color="white" onClick={onCopy} />
+            </Flex>
+          ) : (
+            <Flex align={"center"}>
+              <Text>
+                <a style={{ color: "#fff" }} target="_blank" href={etherscanLink} rel="noopener noreferrer">
+                  {displayAddress}
+                </a>
+              </Text>
+              <CopyIcon mx={2} size={59} color="white" _hover={{ color: "purple" }} onClick={onCopy} />
+            </Flex>
+          )}
+        </span>
+        {hasCopied && toast({ description: "copied!" })}
+      </div>
     </>
   );
 }
