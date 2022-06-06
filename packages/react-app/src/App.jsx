@@ -493,6 +493,7 @@ function App(props) {
 
   const networkSelect = (
     <Select
+      borderColor={'purple'}
       color={"white"}
       w="fit-content"
       placeholder={targetNetwork.name}
@@ -563,7 +564,7 @@ function App(props) {
           />
         </Stack>
 
-        <Stack is direction={"row"}>
+        <Stack align={'center'} direction={{ base: "column", md: "column", lg: "row" }}>
           <Flex>
             <CreateMultiSigModal
               price={price}
@@ -580,8 +581,9 @@ function App(props) {
           <Flex>
             <Select
               w={"100px"}
+              borderColor='purple'
               value={[currentMultiSigAddress]}
-              //isDisabled={!userHasMultiSigs}
+              isDisabled={!userHasMultiSigs}
               onChange={function (e) {
                 setCurrentMultiSigAddress(e.target.value);
                 handleMultiSigChange();
@@ -615,10 +617,10 @@ function App(props) {
           as="Flex"
           direction={{ base: "column", md: "row" }}
           alignItems="center"
-          my={20}
+          mt={20}
           justifyContent="center"
           width="100%"
-          mb={2}
+          mb={10}
         >
           <ButtonGroup gap="6">
             <Button as={CustomLink} to={"/"} color="white" colorScheme={"white"} variant="ghost">

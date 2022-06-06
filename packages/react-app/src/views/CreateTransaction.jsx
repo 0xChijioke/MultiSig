@@ -57,8 +57,9 @@ export default function CreateTransaction({
       setNewSignaturesRequired(signaturesRequired);
     }
   }, [signaturesRequired]);
-
+  
   const showModal = () => {
+    const onOpen = true;
     setIsModalVisible(true);
   };
 
