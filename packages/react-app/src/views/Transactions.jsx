@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Button, List, Spinner, Image, Stack, Center } from "@chakra-ui/react";
-import { ConsoleSqlOutlined, SyncOutlined } from "@ant-design/icons";
 import { parseEther, formatEther } from "@ethersproject/units";
 import { ethers } from "ethers";
 import { Address, AddressInput, Balance, Blockie, TransactionListItem } from "../components";

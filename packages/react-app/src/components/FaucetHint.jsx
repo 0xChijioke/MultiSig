@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { ethers } from "ethers";
 import { useBalance, useGasPrice } from "eth-hooks";

@@ -1,4 +1,4 @@
-import { Badge, Button } from "antd";
+import { Badge, Button } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useBlockNumber, usePoller } from "eth-hooks";
 // import { WalletOutlined } from '@ant-design/icons';

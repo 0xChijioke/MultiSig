@@ -1,4 +1,4 @@
-import { Select } from "antd";
+import { Select } from "@chakra-ui/react";
 import { useLookupAddress } from "eth-hooks/dapps/ens";
 import React, { useCallback, useState } from "react";
 import QrReader from "react-qr-reader";

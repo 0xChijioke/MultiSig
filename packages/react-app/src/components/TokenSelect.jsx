@@ -1,4 +1,4 @@
-import { Select } from "antd";
+import { Select } from "@chakra-ui/react";
 import { useState, useMemo, useEffect } from "react";
 import { ethers } from "ethers";
 import axios from "axios";

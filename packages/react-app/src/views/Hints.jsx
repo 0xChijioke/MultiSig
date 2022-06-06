@@ -1,11 +1,11 @@
-import { Select } from "antd";
+import { Select } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { utils } from "ethers";
 
 import { useTokenList } from "eth-hooks/dapps/dex";
 import { Address, AddressInput } from "../components";
 
-const { Option } = Select;
+
 
 export default function Hints({ yourLocalBalance, mainnetProvider, price, address }) {
   // Get a list of tokens from a tokenlist -> see tokenlists.org!
@@ -114,9 +114,9 @@ export default function Hints({ yourLocalBalance, mainnetProvider, price, addres
           optionFilterProp="children"
         >
           {listOfTokens.map(token => (
-            <Option key={token.address + "_" + token.symbol} value={token.symbol}>
+            <option key={token.address + "_" + token.symbol} value={token.symbol}>
               {token.symbol}
-            </Option>
+            </option>
           ))}
         </Select>
       </div>

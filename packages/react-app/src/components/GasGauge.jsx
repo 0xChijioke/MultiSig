@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "antd";
+import { Button } from "@chakra-ui/react";
 
 // added display of 0 instead of NaN if gas price is not provided
 

@@ -13,7 +13,6 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { GrDown } from "react-icons/gr";
-import "antd/dist/antd.css";
 import {
   useBalance,
   useContractLoader,
