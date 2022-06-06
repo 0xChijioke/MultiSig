@@ -493,7 +493,7 @@ function App(props) {
 
   const networkSelect = (
     <Select
-      borderColor={'purple'}
+      borderColor={"purple"}
       color={"white"}
       w="fit-content"
       placeholder={targetNetwork.name}
@@ -564,7 +564,7 @@ function App(props) {
           />
         </Stack>
 
-        <Stack align={'center'} direction={{ base: "column", md: "column", lg: "row" }}>
+        <Stack align={"center"} direction={{ base: "column", md: "column", lg: "row" }}>
           <Flex>
             <CreateMultiSigModal
               price={price}
@@ -581,7 +581,7 @@ function App(props) {
           <Flex>
             <Select
               w={"100px"}
-              borderColor='purple'
+              borderColor="purple"
               value={[currentMultiSigAddress]}
               isDisabled={!userHasMultiSigs}
               onChange={function (e) {
@@ -599,18 +599,6 @@ function App(props) {
           </Flex>
 
           <Flex>{networkSelect}</Flex>
-          <Flex>
-            <ImportMultiSigModal
-              mainnetProvider={mainnetProvider}
-              targetNetwork={targetNetwork}
-              networkOptions={selectNetworkOptions}
-              multiSigs={multiSigs}
-              setMultiSigs={setMultiSigs}
-              setCurrentMultiSigAddress={setCurrentMultiSigAddress}
-              multiSigWalletABI={multiSigWalletABI}
-              localProvider={localProvider}
-            />
-          </Flex>
         </Stack>
 
         <Box
@@ -665,19 +653,6 @@ function App(props) {
                         contractName={"MultiSigFactory"}
                         isCreateModalVisible={isCreateModalVisible}
                         setIsCreateModalVisible={setIsCreateModalVisible}
-                      />
-                    </Flex>
-
-                    <Flex>
-                      <ImportMultiSigModal
-                        mainnetProvider={mainnetProvider}
-                        targetNetwork={targetNetwork}
-                        networkOptions={selectNetworkOptions}
-                        multiSigs={multiSigs}
-                        setMultiSigs={setMultiSigs}
-                        setCurrentMultiSigAddress={setCurrentMultiSigAddress}
-                        multiSigWalletABI={multiSigWalletABI}
-                        localProvider={localProvider}
                       />
                     </Flex>
                   </HStack>
