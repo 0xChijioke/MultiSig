@@ -16,9 +16,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 
 /*
       📡 This is where you configure your deploy configuration for 🏗 scaffold-eth
-
       check out `packages/scripts/deploy.js` to customize your deployment
-
       out of the box it will auto deploy anything in the `contracts` folder and named *.sol
       plus it will use *.args for constructor args
 */
@@ -26,7 +24,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 // Select the network you want to deploy to here:
 //
-const defaultNetwork = "localhost";
+const defaultNetwork = "goerli";
 
 const mainnetGwei = 21;
 
@@ -69,7 +67,6 @@ module.exports = {
       /*
         notice no mnemonic here? it will just use account 0 of the hardhat node to deploy
         (you can put in a mnemonic here to set the deployer locally)
-
       */
     },
     rinkeby: {
@@ -87,7 +84,7 @@ module.exports = {
       },
     },
     mainnet: {
-      url: "https://mainnet.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad", // <---- YOUR INFURA ID! (or it won't work)
+      url: "https://mainnet.infura.io/v3/c02cdf87ac7e4a25a54b89d10e952d3c", // <---- YOUR INFURA ID! (or it won't work)
       //      url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXXXX/eth/mainnet", // <---- YOUR MORALIS ID! (not limited to infura)
       gasPrice: mainnetGwei * 1000000000,
       accounts: {
@@ -95,14 +92,14 @@ module.exports = {
       },
     },
     ropsten: {
-      url: "https://ropsten.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad", // <---- YOUR INFURA ID! (or it won't work)
+      url: "https://ropsten.infura.io/v3/c02cdf87ac7e4a25a54b89d10e952d3c", // <---- YOUR INFURA ID! (or it won't work)
       //      url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXXXX/eth/ropsten",// <---- YOUR MORALIS ID! (not limited to infura)
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     goerli: {
-      url: "https://goerli.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad", // <---- YOUR INFURA ID! (or it won't work)
+      url: "https://goerli.infura.io/v3/c02cdf87ac7e4a25a54b89d10e952d3c", // <---- YOUR INFURA ID! (or it won't work)
       //      url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXXXX/eth/goerli", // <---- YOUR MORALIS ID! (not limited to infura)
       accounts: {
         mnemonic: mnemonic(),
@@ -284,7 +281,7 @@ module.exports = {
     },
   },
   etherscan: {
-    apiKey: "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW",
+    apiKey: "F4QHKWVQTVPHP6D4Z1E9I21XDNQ6E233VV",
   },
 };
 

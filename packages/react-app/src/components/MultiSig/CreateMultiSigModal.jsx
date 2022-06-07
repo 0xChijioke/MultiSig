@@ -23,7 +23,6 @@ import { ethers } from "ethers";
 import "./Modal.css";
 import { AddressInput, EtherInput } from "..";
 
-
 export default function CreateMultiSigModal({
   price,
   selectedChainId,
@@ -164,29 +163,21 @@ export default function CreateMultiSigModal({
           if (update && update.code) {
             setPendingCreate(false);
             setTxSent(false);
-            toast({
-              title: "Error.",
-              description: "Something went wrong, please try again.",
-              status: "error",
-              duration: 9000,
-              isClosable: true,
-            });
           }
 
           if (update && (update.status === "confirmed" || update.status === 1)) {
             console.log("tx update confirmed!");
             setPendingCreate(false);
             setTxSuccess(true);
+            toast({
+              title: "Account created.",
+              description: "Your multi-sig wallet has been created.😉",
+              status: "success",
+              duration: 9000,
+              isClosable: true,
+            });
             setTimeout(() => {
               setIsCreateModalVisible(false);
-
-              toast({
-                title: "Account created.",
-                description: "We've created your multi-sig wallet for you.",
-                status: "success",
-                duration: 9000,
-                isClosable: true,
-              });
 
               resetState();
             }, 2500);
@@ -210,7 +201,7 @@ export default function CreateMultiSigModal({
         New Wallet
       </Button>
 
-      <Modal id={pendingCreate ? "none" : "modal"} isOpen={isOpen} onClose={onClose}>
+      <Modal id={pendingCreate ? "none" : "modal"} motionPreset="slideInBottom" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign={"center"} color={"white"}>

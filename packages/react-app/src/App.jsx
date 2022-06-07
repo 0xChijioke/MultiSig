@@ -15,7 +15,6 @@ import { Route, Switch, useLocation } from "react-router-dom";
 import "./App.css";
 import {
   Account,
-  
   CustomLink,
   Header,
   NetworkDisplay,
@@ -35,7 +34,7 @@ import { useStaticJsonRPC, useLocalStorage } from "./hooks";
 const { ethers } = require("ethers");
 
 /// 📡 What chain are your contracts deployed to?
-const initialNetwork = NETWORKS.mainnet; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const initialNetwork = NETWORKS.goerli; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = false;
@@ -198,7 +197,7 @@ const providers = [
 function App(props) {
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
-  const networkOptions = [initialNetwork.name, "mainnet", "rinkeby"];
+  const networkOptions = [initialNetwork.name, "mainnet", "goerli"];
 
   const [injectedProvider, setInjectedProvider] = useState();
   const [address, setAddress] = useState();
@@ -206,7 +205,7 @@ function App(props) {
   const location = useLocation();
 
   const cachedNetwork = window.localStorage.getItem("network");
-  let targetNetwork = NETWORKS[cachedNetwork || "rinkeby"];
+  let targetNetwork = NETWORKS[cachedNetwork || "goerli"];
 
   // backend transaction handler:
   let BACKEND_URL = "http://localhost:49899/";
@@ -299,20 +298,16 @@ function App(props) {
   const [multiSigs, setMultiSigs] = useState([]);
   const [currentMultiSigAddress, setCurrentMultiSigAddress] = useState();
 
-  const [importedMultiSigs] = useLocalStorage("importedMultiSigs");
-
-  /*
-    if you want to hardcode a specific multisig for the frontend for everyone:
-  useEffect(()=>{
-    if(userSigner){
-      setCurrentMultiSigAddress("0x31787164D5A4ca8072035Eb89478e85f45C6d408")
-    }
-  },[userSigner])
-  */
+  //  // if you want to hardcode a specific multisig for the frontend for everyone:
+  // useEffect(()=>{
+  //   if(userSigner){
+  //     setCurrentMultiSigAddress("0x31787164D5A4ca8072035Eb89478e85f45C6d408")
+  //   }
+  // },[userSigner])
 
   useEffect(() => {
     if (address) {
-      let multiSigsForUser = ownersMultiSigEvents.reduce((filtered, createEvent) => {
+      const multiSigsForUser = ownersMultiSigEvents.reduce((filtered, createEvent) => {
         if (createEvent.args.owners.includes(address) && !filtered.includes(createEvent.args.contractAddress)) {
           filtered.push(createEvent.args.contractAddress);
         }
@@ -320,11 +315,7 @@ function App(props) {
         return filtered;
       }, []);
 
-      if (importedMultiSigs && importedMultiSigs[targetNetwork.name]) {
-        multiSigsForUser = [...new Set([...importedMultiSigs[targetNetwork.name], ...multiSigsForUser])];
-      }
-
-      if (multiSigsForUser.length > 0 && multiSigsForUser.length !== multiSigs.length) {
+      if (multiSigsForUser.length > 0) {
         const recentMultiSigAddress = multiSigsForUser[multiSigsForUser.length - 1];
         if (recentMultiSigAddress !== currentMultiSigAddress) setContractNameForEvent(null);
         setCurrentMultiSigAddress(recentMultiSigAddress);
@@ -386,18 +377,11 @@ function App(props) {
   const [executeTransactionEvents, setExecuteTransactionEvents] = useState();
 
   useEffect(() => {
-    setOwnerEvents(allOwnerEvents.filter(contractEvent => contractEvent.address === currentMultiSigAddress));
-  }, [allOwnerEvents, currentMultiSigAddress]);
-
-  useEffect(() => {
-    const filteredEvents = allExecuteTransactionEvents.filter(
-      contractEvent => contractEvent.address === currentMultiSigAddress,
+    setExecuteTransactionEvents(
+      allExecuteTransactionEvents.filter(contractEvent => contractEvent.address === currentMultiSigAddress).reverse(),
     );
-    const nonceNum = typeof nonce === "number" ? nonce : nonce?.toNumber();
-    if (nonceNum === filteredEvents.length) {
-      setExecuteTransactionEvents(filteredEvents.reverse());
-    }
-  }, [allExecuteTransactionEvents, currentMultiSigAddress, nonce]);
+    setOwnerEvents(allOwnerEvents.filter(contractEvent => contractEvent.address === currentMultiSigAddress));
+  }, [allExecuteTransactionEvents, allOwnerEvents, currentMultiSigAddress]);
 
   // EXTERNAL CONTRACT EXAMPLE:
   // If you want to bring in the mainnet DAI contract it would look like:
@@ -452,13 +436,12 @@ function App(props) {
 
   const handleMultiSigChange = value => {
     setContractNameForEvent(null);
+   
   };
 
   console.log("currentMultiSigAddress:", currentMultiSigAddress);
 
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
-
-  
 
   console.log(targetNetwork.name);
 
@@ -469,7 +452,7 @@ function App(props) {
       w="fit-content"
       placeholder={targetNetwork.name}
       onChange={e => {
-        if (targetNetwork.chainId != NETWORKS.rinkeby.chainId) {
+        if (e.target.value != NETWORKS.rinkeby.chainId) {
           window.localStorage.setItem("network", e.target.value);
           setTimeout(() => {
             window.location.reload();
@@ -477,16 +460,16 @@ function App(props) {
         }
       }}
     >
-      <option color={NETWORKS.rinkeby.color} value={NETWORKS.rinkeby.name}>
+      <option color={NETWORKS.rinkeby.color} value={NETWORKS.rinkeby.chainId}>
         {NETWORKS.rinkeby.name}
       </option>
-      <option color={NETWORKS.mainnet.color} value={NETWORKS.mainnet.name}>
+      <option color={NETWORKS.mainnet.color} value={NETWORKS.mainnet.chainId}>
         {NETWORKS.mainnet.name}
       </option>
-      <option color={NETWORKS.localhost.color} value={NETWORKS.localhost.name}>
+      <option color={NETWORKS.localhost.color} value={NETWORKS.localhost.chainId}>
         {NETWORKS.localhost.name}
       </option>
-      <option color={NETWORKS.goerli.color} value={NETWORKS.goerli.name}>
+      <option color={NETWORKS.goerli.color} value={NETWORKS.goerli.chainId}>
         {NETWORKS.goerli.name}
       </option>
     </Select>
@@ -566,7 +549,7 @@ function App(props) {
             >
               {multiSigs.map((address, index) => (
                 <option key={index} value={address}>
-                  {address}
+                  {address.slice(-15)}...
                 </option>
               ))}
             </Select>

@@ -19,7 +19,9 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Select,
+  Spinner,
   Button,
+  useToast
 } from "@chakra-ui/react";
 import { AiOutlineCode } from "react-icons/ai";
 import { webc } from "../image";
@@ -38,6 +40,7 @@ export default function CreateTransaction({
   nonce,
   signaturesRequired,
 }) {
+  const toast = useToast();
   const history = useHistory();
 
   const [methodName, setMethodName] = useLocalStorage("methodName", "transferFunds");
@@ -57,7 +60,7 @@ export default function CreateTransaction({
       setNewSignaturesRequired(signaturesRequired);
     }
   }, [signaturesRequired]);
-  
+
   const showModal = () => {
     const onOpen = true;
     setIsModalVisible(true);
@@ -139,6 +142,13 @@ export default function CreateTransaction({
           });
 
           console.log("RESULT", res.data);
+          toast({
+            title: "Transaction has been proposed.",
+            description: "Your transaction is available for signing by owners on the pool page",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
           setTimeout(() => {
             history.push("/pool");
             setLoading(false);
@@ -150,6 +160,13 @@ export default function CreateTransaction({
     } catch (error) {
       console.log("Error: ", error);
       setLoading(false);
+      toast({
+        title: "Error?.",
+        description: "Something went wrong. Please check your inputs and try again",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
     }
   };
 
@@ -222,7 +239,7 @@ export default function CreateTransaction({
                     <InputGroup my={6}>
                       <Input
                         placeholder="Custom call data"
-                        color={'white'}
+                        color={"white"}
                         value={customCallData}
                         onChange={e => {
                           setCustomCallData(e.target.value);
@@ -231,7 +248,7 @@ export default function CreateTransaction({
 
                       <InputRightElement
                         onClick={showModal}
-                        color='white'
+                        color="white"
                         children={
                           <Tooltip hasArrow label="Parse transaction data" bg="gray.600">
                             <AiOutlineCode size={25} color="white" />
@@ -256,8 +273,8 @@ export default function CreateTransaction({
                 )}
               </div>
 
-              <Button colorScheme={"purple"} my={6} loading={loading} onClick={createTransaction}>
-                Propose
+              <Button colorScheme={"purple"} my={6} isLoading={loading} onClick={createTransaction}>
+                {loading ? <Spinner /> : "Propose"}
               </Button>
             </>
           )}

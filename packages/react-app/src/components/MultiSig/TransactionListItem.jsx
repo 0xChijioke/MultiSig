@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, List, ListItem } from "@chakra-ui/react";
+import { Button, List, Text, ListItem } from "@chakra-ui/react";
 
 import { Address, Balance, Blockie } from "..";
 import TransactionDetailsModal from "./TransactionDetailsModal";
@@ -55,7 +55,9 @@ export default function TransactionListItem({
     if (toSelf && txnData[item.hash]?.functionFragment?.name == "addSigner") {
       return (
         <>
-          <span style={{ fontSize: 16, fontWeight: "bold" }}>Add Signer</span>
+          <Text fontSize="16px" fontWeight="bold">
+            Add Signer
+          </Text>
           {ethers.utils.isAddress(txnData[item.hash]?.args[0]) && (
             <Address
               address={txnData[item.hash]?.args[0]}
@@ -87,13 +89,19 @@ export default function TransactionListItem({
     } else if (!txnData[item.hash]?.functionFragment?.name) {
       return (
         <>
-          <span style={{ fontSize: 16, fontWeight: "bold" }}>Transfer</span>
+          <Text fontWeight="bold">Transfer</Text>
           <Balance
             balance={item.value ? item.value : parseEther("" + parseFloat(item.amount).toFixed(12))}
             dollarMultiplier={price}
           />
           to
-          <Address address={item.to} ensProvider={mainnetProvider} blockExplorer={blockExplorer} fontSize={16} />
+          <Address
+            px="5px"
+            address={item.to}
+            ensProvider={mainnetProvider}
+            blockExplorer={blockExplorer}
+            fontSize={16}
+          />
           <>{children}</>
         </>
       );
@@ -170,13 +178,25 @@ export default function TransactionListItem({
         price={price}
       />
       {
-        <ListItem key={item.hash} style={{ position: "relative", display: "flex", flexWrap: "wrap", width: 800 }}>
+        <ListItem
+          w={{ base: "100%", lg: "800px" }}
+          align="center"
+          justifyContent={"center"}
+          key={item.hash}
+          style={{
+            position: "relative",
+            display: "flex",
+            //flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <>
-            <a href={blockExplorer + "tx/" + item.hash} target="_blank">
-              <b style={{ padding: 16 }}>#{typeof item.nonce === "number" ? item.nonce : item.nonce.toNumber()}</b>
+            <a style={{ padding: "5px" }} href={blockExplorer + "tx/" + item.hash} target="_blank">
+              <b>#{typeof item.nonce === "number" ? item.nonce : item.nonce.toNumber()}</b>
             </a>
             {txDisplay()}
-            <Blockie size={4} scale={8} address={item.hash} />
+            <Blockie padding='5px' size={2} scale={8} address={item.hash} />
           </>
         </ListItem>
       }

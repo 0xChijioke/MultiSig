@@ -58,8 +58,9 @@ export default function Home({
         </Box>
         
         <List
-          dataSource={executeTransactionEvents}
-          renderItem={item => {
+          py={10}
+          color={'white'}>  
+          {executeTransactionEvents?.map((item) => {
             return (
               <TransactionListItem
                 item={Object.create(item)}
@@ -70,8 +71,8 @@ export default function Home({
                 contractName={contractName}
               />
             );
-          }}
-        />
+          })}
+        </List>
       </Container>
 
 

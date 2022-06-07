@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, List, Spinner, Image, Stack, Center } from "@chakra-ui/react";
+import { Button, List, Spinner, Image, Flex, Center } from "@chakra-ui/react";
 import { parseEther, formatEther } from "@ethersproject/units";
 import { ethers } from "ethers";
 import { Address, AddressInput, Balance, Blockie, TransactionListItem } from "../components";
@@ -61,7 +61,6 @@ export default function Transactions({
     if (readContracts[contractName]) getTransactions();
   }, 3777);
 
-  
   const getSortedSigList = async (allSigs, newHash) => {
     const sigList = [];
     for (const sig in allSigs) {
@@ -97,7 +96,7 @@ export default function Transactions({
   }
 
   return (
-    <div style={{ maxWidth: 850, margin: "auto", marginTop: 32, marginBottom: 32 }}>
+    <div style={{ maxWidth: 850, margin: "auto", marginTop: 32, marginBottom: 32, color: "#fff" }}>
       <h1>
         <b style={{ padding: 16 }}>
           #
@@ -109,95 +108,104 @@ export default function Transactions({
         </b>
       </h1>
 
-      <List>
-        {transactions &&
-          transactions.map(item => {
-            const hasSigned = item.signers.indexOf(address) >= 0;
-            const hasEnoughSignatures = item.signatures.length <= signaturesRequired.toNumber();
+      <Flex justify={"center"} align={"center"}>
+        <List alignItems={"center"} color={"white"}>
+          {transactions &&
+            transactions.map(item => {
+              const hasSigned = item.signers.indexOf(address) >= 0;
+              const hasEnoughSignatures = item.signatures.length <= signaturesRequired.toNumber();
 
-            console.log("transaction details:", item);
+              console.log("transaction details:", item);
 
-            return (
-              <TransactionListItem
-                item={item}
-                mainnetProvider={mainnetProvider}
-                blockExplorer={blockExplorer}
-                price={price}
-                readContracts={readContracts}
-                contractName={contractName}
-              >
-                <div style={{ padding: 16 }}>
-                  <span style={{ padding: 4 }}>
-                    {item.signatures.length}/{signaturesRequired.toNumber()} {hasSigned ? "✅" : ""}
-                  </span>
-                  <span style={{ padding: 4 }}>
-                    <Button
-                      type="secondary"
-                      onClick={async () => {
-                        const newHash = await readContracts[contractName].getTransactionHash(
-                          item.nonce,
-                          item.to,
-                          parseEther("" + parseFloat(item.amount).toFixed(12)),
-                          item.data,
-                        );
-
-                        const signature = await userSigner?.signMessage(ethers.utils.arrayify(newHash));
-                        const recover = await readContracts[contractName].recover(newHash, signature);
-                        const isOwner = await readContracts[contractName].isOwner(recover);
-                        if (isOwner) {
-                          const [finalSigList, finalSigners] = await getSortedSigList(
-                            [...item.signatures, signature],
-                            newHash,
+              return (
+                <TransactionListItem
+                  item={item}
+                  mainnetProvider={mainnetProvider}
+                  blockExplorer={blockExplorer}
+                  price={price}
+                  readContracts={readContracts}
+                  contractName={contractName}
+                >
+                  <div style={{ padding: 16 }}>
+                    <span style={{ padding: 4 }}>
+                      {item.signatures.length}/{signaturesRequired.toNumber()} {hasSigned ? "✅" : ""}
+                    </span>
+                    <span style={{ padding: 4 }}>
+                      <Button
+                        mr={3}
+                        variant={hasSigned ? "ghost" : "outline"}
+                        size={{ base: "sm", md: "lg" }}
+                        p="3px"
+                        color="white"
+                        colorScheme={"purple"}
+                        onClick={async () => {
+                          const newHash = await readContracts[contractName].getTransactionHash(
+                            item.nonce,
+                            item.to,
+                            parseEther("" + parseFloat(item.amount).toFixed(12)),
+                            item.data,
                           );
-                          const res = await axios.post(poolServerUrl, {
-                            ...item,
-                            signatures: finalSigList,
-                            signers: finalSigners,
-                          });
-                        }
-                      }}
-                    >
-                      Sign
-                    </Button>
-                    <Button
-                      key={item.hash}
-                      type={hasEnoughSignatures ? "primary" : "secondary"}
-                      onClick={async () => {
-                        const newHash = await readContracts[contractName].getTransactionHash(
-                          item.nonce,
-                          item.to,
-                          parseEther("" + parseFloat(item.amount).toFixed(12)),
-                          item.data,
-                        );
 
-                        const [finalSigList, finalSigners] = await getSortedSigList(item.signatures, newHash);
+                          const signature = await userSigner?.signMessage(ethers.utils.arrayify(newHash));
+                          const recover = await readContracts[contractName].recover(newHash, signature);
+                          const isOwner = await readContracts[contractName].isOwner(recover);
+                          if (isOwner) {
+                            const [finalSigList, finalSigners] = await getSortedSigList(
+                              [...item.signatures, signature],
+                              newHash,
+                            );
+                            const res = await axios.post(poolServerUrl, {
+                              ...item,
+                              signatures: finalSigList,
+                              signers: finalSigners,
+                            });
+                          }
+                        }}
+                      >
+                        Sign
+                      </Button>
+                      <Button
+                        key={item.hash}
+                        colorScheme="white"
+                        size={{ base: "md", md: "lg" }}
+                        variant={hasEnoughSignatures ? "solid" : "ghost"}
+                        onClick={async () => {
+                          const newHash = await readContracts[contractName].getTransactionHash(
+                            item.nonce,
+                            item.to,
+                            parseEther("" + parseFloat(item.amount).toFixed(12)),
+                            item.data,
+                          );
 
-                        console.log(
-                          "writeContracts: ",
-                          item.to,
-                          parseEther("" + parseFloat(item.amount).toFixed(12)),
-                          item.data,
-                          finalSigList,
-                        );
+                          const [finalSigList, finalSigners] = await getSortedSigList(item.signatures, newHash);
 
-                        tx(
-                          writeContracts[contractName].executeTransaction(
+                          console.log(
+                            "writeContracts: ",
                             item.to,
                             parseEther("" + parseFloat(item.amount).toFixed(12)),
                             item.data,
                             finalSigList,
-                          ),
-                        );
-                      }}
-                    >
-                      Exec
-                    </Button>
-                  </span>
-                </div>
-              </TransactionListItem>
-            );
-          })}
-      </List>
+                          );
+
+                          tx(
+                            writeContracts[contractName].executeTransaction(
+                              item.to,
+                              parseEther("" + parseFloat(item.amount).toFixed(12)),
+                              item.data,
+                              finalSigList,
+                            ),
+                          );
+                        }}
+                      >
+                        Exec
+                      </Button>
+                    </span>
+                  </div>
+                </TransactionListItem>
+              );
+            })}
+        </List>
+      </Flex>
     </div>
   );
 }
