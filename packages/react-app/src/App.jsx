@@ -34,7 +34,7 @@ import { useStaticJsonRPC, useLocalStorage } from "./hooks";
 const { ethers } = require("ethers");
 
 /// 📡 What chain are your contracts deployed to?
-const initialNetwork = NETWORKS.goerli; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const initialNetwork = NETWORKS.rinkeby; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = false;
@@ -197,7 +197,7 @@ const providers = [
 function App(props) {
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
-  const networkOptions = [initialNetwork.name, "mainnet", "goerli"];
+  const networkOptions = [initialNetwork.name, "mainnet", "goerli", "rinkeby"];
 
   const [injectedProvider, setInjectedProvider] = useState();
   const [address, setAddress] = useState();
@@ -436,7 +436,6 @@ function App(props) {
 
   const handleMultiSigChange = value => {
     setContractNameForEvent(null);
-   
   };
 
   console.log("currentMultiSigAddress:", currentMultiSigAddress);
@@ -452,24 +451,22 @@ function App(props) {
       w="fit-content"
       placeholder={targetNetwork.name}
       onChange={e => {
-        if (e.target.value != NETWORKS.rinkeby.chainId) {
-          window.localStorage.setItem("network", e.target.value);
-          setTimeout(() => {
-            window.location.reload();
-          }, 1);
-        }
+        window.localStorage.setItem("network", e.target.value);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1);
       }}
     >
-      <option color={NETWORKS.rinkeby.color} value={NETWORKS.rinkeby.chainId}>
+      <option color={NETWORKS.rinkeby.color} value={NETWORKS.rinkeby.name}>
         {NETWORKS.rinkeby.name}
       </option>
-      <option color={NETWORKS.mainnet.color} value={NETWORKS.mainnet.chainId}>
+      <option color={NETWORKS.mainnet.color} value={NETWORKS.mainnet.name}>
         {NETWORKS.mainnet.name}
       </option>
-      <option color={NETWORKS.localhost.color} value={NETWORKS.localhost.chainId}>
+      <option color={NETWORKS.localhost.color} value={NETWORKS.localhost.name}>
         {NETWORKS.localhost.name}
       </option>
-      <option color={NETWORKS.goerli.color} value={NETWORKS.goerli.chainId}>
+      <option color={NETWORKS.goerli.color} value={NETWORKS.goerli.name}>
         {NETWORKS.goerli.name}
       </option>
     </Select>
